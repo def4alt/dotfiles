@@ -6,7 +6,7 @@
 }: {
   mkDarwin = {
     hostname,
-    username ? "andrii",
+    username ? "andriiolkhovych",
     platform ? "aarch64-darwin",
   }:
     inputs.nix-darwin.lib.darwinSystem {
@@ -53,7 +53,7 @@
 
   mkHome = {
     hostname,
-    username ? "andrii",
+    username ? "andriiolkhovych",
     platform ? "x86_64-linux",
   }:
     inputs.home-manager.lib.homeManagerConfiguration {

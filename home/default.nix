@@ -33,6 +33,8 @@ in {
       # A smarter cd
       zoxide
 
+      docker
+
       uv
       gh
 

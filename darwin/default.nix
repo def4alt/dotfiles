@@ -18,7 +18,6 @@
     EDITOR = "nvim";
     SYSTEMD_EDITOR = "nvim";
     VISUAL = "nvim";
-    PATH = "${config.environment.systemPath}:/opt/ST/STM32CubeCLT_1.18.0/STM32CubeProgrammer/bin";
   };
 
   nix = {
@@ -28,7 +27,7 @@
     settings.experimental-features = "nix-command flakes";
   };
 
-  system.primaryUser = "andrii";
+  system.primaryUser = "andriiolkhovych";
 
   networking.hostName = hostname;
 
@@ -57,14 +56,16 @@
       function fish_greeting
       end
 
-      set FLUTTER_ROOT "/Users/andrii/Library/Application Support/io.flutterflow.prod.mac/flutter/bin"
-      set -gx PATH $HOME/.npm-global/bin $HOME/.pub-cache/bin "/Users/andrii/Library/Application Support/io.flutterflow.prod.mac/flutter/bin" /opt/ST/STM32CubeCLT_1.18.0/STM32CubeProgrammer/bin $PATH
-
       zoxide init fish | source
     '';
   };
   homebrew = {
     enable = true;
+    brews = [
+      "ruby"
+      "cocoapods"
+      "gemini-cli"
+    ];
     casks = [
       "visual-studio-code"
       "1password"
@@ -76,9 +77,10 @@
       "spotify"
       "telegram"
       "ghostty"
-      "docker-desktop"
       "calibre"
-      "flutterflow"
+      "whatsapp"
+      "transmission"
+      "flutter"
     ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
@@ -160,7 +162,7 @@
     trackpad.Clicking = true;
   };
 
-  users.users.andrii = {
+  users.users.andriiolkhovych = {
     name = "${username}";
     home = "/Users/${username}";
   };

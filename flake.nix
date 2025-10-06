@@ -24,7 +24,7 @@
     homeConfigurations =
       if isLinux
       then {
-        "andrii@alderbook" = helper.mkHome {
+        "andriiolkhovych@alderbook" = helper.mkHome {
           hostname = "alderbook";
           platform = "aarch64-darwin";
         };
