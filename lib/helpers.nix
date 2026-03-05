@@ -6,8 +6,9 @@
 }: {
   mkDarwin = {
     hostname,
-    username ? "andriiolkhovych",
+    username ? "def4alt",
     platform ? "aarch64-darwin",
+    overlays ? [],
   }:
     inputs.nix-darwin.lib.darwinSystem {
       specialArgs = {
@@ -20,6 +21,9 @@
           ;
       };
       modules = [
+        {
+          nixpkgs.overlays = overlays;
+        }
         ../darwin
         inputs.nix-homebrew.darwinModules.nix-homebrew
         {
@@ -53,8 +57,9 @@
 
   mkHome = {
     hostname,
-    username ? "andriiolkhovych",
+    username ? "def4alt",
     platform ? "x86_64-linux",
+    overlays ? [],
   }:
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = inputs.nixpkgs.legacyPackages.${platform};
@@ -68,7 +73,12 @@
           stateVersion
           ;
       };
-      modules = [../home];
+      modules = [
+        {
+          nixpkgs.overlays = overlays;
+        }
+        ../home
+      ];
     };
 
   forAllSystems = inputs.nixpkgs.lib.genAttrs [

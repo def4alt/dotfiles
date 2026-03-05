@@ -17,38 +17,30 @@ in {
       else "/";
 
     packages = with pkgs; [
-      direnv
       coreutils
       ripgrep
-      gnused
       wget
-      pre-commit
-      gnupg
-      sops
-      nodejs
+      lua
       luarocks
       ncdu
       # A simple, fast and user-friendly alternative to find
       fd
       # A smarter cd
       zoxide
+      qpdf
 
       docker
 
-      uv
-      gh
+      python3
 
-      # SkiGaudi
-      firebase-tools
-      google-cloud-sdk
-      claude-code
+      gh
+      pay-respects
     ];
+
+    sessionPath = [ "$HOME/.npm-global/bin" ];
 
     sessionVariables = {
       EDITOR = "nvim";
-      MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man'";
-      MANROFFOPT = "-c";
-      PAGER = "bat";
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
     };
@@ -60,16 +52,42 @@ in {
 
   fonts.fontconfig.enable = true;
 
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" ];
+      theme = "robbyrussell";
+    };
+
+    shellAliases = {
+      ll = "ls -l";
+      update = "sudo darwin-rebuild switch --flake \"$HOME/dotfiles#alderbook\"";
+      k = "kubectl";
+    };
+
+    initContent = ''
+      # Remove alias from grep
+      unalias grep 2>/dev/null
+    '';
+
+    history.size = 10000;
+  };
+
+
   imports = [
     ./modules/bat.nix
     ./modules/nvim.nix
     ./modules/eza.nix
     ./modules/fzf.nix
     ./modules/git.nix
+    ./modules/delta.nix
     ./modules/ripgrep.nix
-    ./modules/tmux.nix
     ./modules/zoxide.nix
     ./modules/ssh.nix
     ./modules/ghostty.nix
+    ./modules/direnv.nix
   ];
 }

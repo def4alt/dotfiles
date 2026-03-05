@@ -27,48 +27,23 @@
     settings.experimental-features = "nix-command flakes";
   };
 
-  system.primaryUser = "andriiolkhovych";
+  system.primaryUser = "def4alt";
 
   networking.hostName = hostname;
 
   documentation.enable = true;
-  documentation.doc.enable = true;
-  documentation.info.enable = true;
   documentation.man.enable = true;
 
-  programs.info.enable = true;
-  programs.fish = {
-    enable = true;
-    vendor = {
-      config.enable = true;
-      functions.enable = true;
-      completions.enable = true;
-    };
-    shellAliases = {
-      cat = "bat";
-      cd = "z";
-      find = "fd";
-      ls = "eza -1 --color=auto";
-      ll = "eza -1l --color=auto";
-    };
-
-    shellInit = ''
-      function fish_greeting
-      end
-
-      zoxide init fish | source
-    '';
-  };
   homebrew = {
     enable = true;
     brews = [
-      "ruby"
-      "cocoapods"
-      "gemini-cli"
+      "firebase-cli"
+      "anomalyco/tap/opencode"
+      "ollama"
     ];
     casks = [
-      "visual-studio-code"
       "1password"
+      "obsidian"
       "zen"
       "raycast"
       "rectangle"
@@ -76,12 +51,23 @@
       "zoom"
       "spotify"
       "telegram"
-      "ghostty"
       "calibre"
+      "ghostty"
       "whatsapp"
-      "transmission"
-      "flutter"
+      "anki"
+      "topnotch"
+      "steam"
+      "tailscale-app"
+      "visual-studio-code"
+      "antigravity"
     ];
+    taps = [
+      "anomalyco/tap"
+    ];
+    masApps = {
+      Wireguard = 1451685025;
+      Flow = 1423210932;
+    };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
@@ -162,12 +148,13 @@
     trackpad.Clicking = true;
   };
 
-  users.users.andriiolkhovych = {
+  users.users.def4alt = {
     name = "${username}";
     home = "/Users/${username}";
   };
 
-  environment.shells = [pkgs.fish];
+  environment.shells = [pkgs.zsh];
+  environment.pathsToLink = [ "/share/zsh" ];
 
   # Set Git commit hash for darwin-version.
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
