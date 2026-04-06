@@ -3,6 +3,7 @@
 let
   # Your age public key from age-keygen
   agePublicKey = "age1h5hqy6aupk6j5v522nv3jhtuq0cwp086jdc25fmujn8r9spd0e4szx559u";
+  secretPath = config.sops.secrets.opencode-api-key.path;
 in {
   imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
@@ -12,13 +13,18 @@ in {
     defaultSopsFile = ./secrets.yaml;
 
     secrets.opencode-api-key = {
-      path = "${config.sops.defaultSymlinkPath}/opencode-api-key";
+      path = secretPath;
     };
   };
 
+  # Expose path first, then load value in shell init
+  home.sessionVariables = {
+    OPENCODE_API_KEY_FILE = secretPath;
+  };
+
   programs.zsh.initContent = ''
-    if [ -f "$OPENCODE_API_KEY" ]; then
-      export OPENCODE_API_KEY=$(cat "$OPENCODE_API_KEY")
+    if [ -f "$OPENCODE_API_KEY_FILE" ]; then
+      export OPENCODE_API_KEY="$(cat "$OPENCODE_API_KEY_FILE")"
     fi
   '';
 }
