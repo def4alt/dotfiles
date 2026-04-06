@@ -1,5 +1,7 @@
 {
+  lib,
   pkgs,
+  inputs,
   username,
   stateVersion,
   ...
@@ -30,11 +32,16 @@ in {
       qpdf
 
       docker
+      tmux
 
       python3
+      nodejs
 
       gh
       pay-respects
+
+      age
+      sops
     ];
 
     sessionPath = [ "$HOME/.npm-global/bin" ];
@@ -43,8 +50,18 @@ in {
       EDITOR = "nvim";
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
+      NPM_CONFIG_PREFIX = "$HOME/.npm-global";
     };
   };
+
+  home.activation.installPiCodingAgent = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
+    mkdir -p "$HOME/.npm-global"
+
+    if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
+      npm install --location=global --prefix "$HOME/.npm-global" @mariozechner/pi-coding-agent
+    fi
+  '';
 
   manual.manpages.enable = true;
   programs.man.enable = true;
@@ -78,6 +95,7 @@ in {
 
 
   imports = [
+    ./modules/sops.nix
     ./modules/bat.nix
     ./modules/nvim.nix
     ./modules/eza.nix
@@ -88,6 +106,7 @@ in {
     ./modules/zoxide.nix
     ./modules/ssh.nix
     ./modules/ghostty.nix
+    ./modules/tmux.nix
     ./modules/direnv.nix
   ];
 }

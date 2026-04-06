@@ -39,7 +39,7 @@
     brews = [
       "firebase-cli"
       "anomalyco/tap/opencode"
-      "ollama"
+      "gemini-cli"
     ];
     casks = [
       "1password"
@@ -59,15 +59,10 @@
       "steam"
       "tailscale-app"
       "visual-studio-code"
-      "antigravity"
     ];
     taps = [
       "anomalyco/tap"
     ];
-    masApps = {
-      Wireguard = 1451685025;
-      Flow = 1423210932;
-    };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
@@ -146,6 +141,19 @@
     menuExtraClock.ShowSeconds = true;
     trackpad.ActuationStrength = 0;
     trackpad.Clicking = true;
+
+    CustomUserPreferences = {
+      "com.apple.symbolichotkeys" = {
+        AppleSymbolicHotKeys = {
+          "60" = {
+            enabled = false;
+          };
+          "61" = {
+            enabled = false;
+          };
+        };
+      };
+    };
   };
 
   users.users.def4alt = {
