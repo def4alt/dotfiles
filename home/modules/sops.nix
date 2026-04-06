@@ -3,7 +3,8 @@
 let
   # Your age public key from age-keygen
   agePublicKey = "age1h5hqy6aupk6j5v522nv3jhtuq0cwp086jdc25fmujn8r9spd0e4szx559u";
-  secretPath = config.sops.secrets.opencode-api-key.path;
+  # Hardcoded path - sops-nix uses this default symlink path
+  secretPath = "${config.home.homeDirectory}/.local/share/sops/age/secrets/opencode-api-key";
 in {
   imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
