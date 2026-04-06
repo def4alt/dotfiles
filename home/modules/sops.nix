@@ -16,7 +16,7 @@ in {
     };
   };
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     if [ -f "$OPENCODE_API_KEY" ]; then
       export OPENCODE_API_KEY=$(cat "$OPENCODE_API_KEY")
     fi
