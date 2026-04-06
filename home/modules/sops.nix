@@ -16,5 +16,9 @@ in {
     };
   };
 
-  home.sessionVariables.OPENCODE_API_KEY = "${config.sops.secrets.opencode-api-key.path}";
+  programs.zsh.initExtra = ''
+    if [ -f "$OPENCODE_API_KEY" ]; then
+      export OPENCODE_API_KEY=$(cat "$OPENCODE_API_KEY")
+    fi
+  '';
 }
