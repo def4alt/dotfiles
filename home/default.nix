@@ -51,6 +51,7 @@ in {
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
     };
   };
 
