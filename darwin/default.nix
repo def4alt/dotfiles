@@ -49,16 +49,16 @@
       "rectangle"
       "signal"
       "zoom"
-      "spotify"
       "telegram"
       "calibre"
       "ghostty"
       "whatsapp"
       "anki"
       "topnotch"
-      "steam"
       "tailscale-app"
       "visual-studio-code"
+      "antigravity"
+      "zotero"
     ];
     taps = [
       "anomalyco/tap"
