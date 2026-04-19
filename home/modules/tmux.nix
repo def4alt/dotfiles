@@ -15,6 +15,7 @@
       set -g base-index 1
       setw -g pane-base-index 1
       set -g renumber-windows on
+      set -sg escape-time 0
 
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -v -c "#{pane_current_path}"
