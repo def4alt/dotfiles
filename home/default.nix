@@ -89,6 +89,10 @@ in {
     initContent = ''
       # Remove alias from grep
       unalias grep 2>/dev/null
+
+      if command -v direnv >/dev/null 2>&1; then
+        eval "$(direnv hook zsh)"
+      fi
     '';
 
     history.size = 10000;
@@ -108,6 +112,5 @@ in {
     ./modules/ssh.nix
     ./modules/ghostty.nix
     ./modules/tmux.nix
-    ./modules/direnv.nix
   ];
 }

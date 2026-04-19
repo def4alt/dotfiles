@@ -37,9 +37,9 @@
   homebrew = {
     enable = true;
     brews = [
+      "direnv"
       "firebase-cli"
       "anomalyco/tap/opencode"
-      "gemini-cli"
     ];
     casks = [
       "1password"
