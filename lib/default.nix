@@ -10,5 +10,6 @@ in {
     (helpers)
     mkDarwin
     mkHome
+    forAllSystems
     ;
 }
