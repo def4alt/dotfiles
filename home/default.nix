@@ -78,23 +78,7 @@ in {
     enable = true;
     enableCompletion = false;
 
-    initContent = lib.mkForce ''
-      HISTSIZE="10000"
-      SAVEHIST="10000"
-
-      HISTFILE="$HOME/.zsh_history"
-      mkdir -p "$(dirname "$HISTFILE")"
-
-      set_opts=(
-        HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
-        NO_APPEND_HISTORY NO_EXTENDED_HISTORY NO_HIST_EXPIRE_DUPS_FIRST
-        NO_HIST_FIND_NO_DUPS NO_HIST_IGNORE_ALL_DUPS NO_HIST_SAVE_NO_DUPS
-      )
-      for opt in "''${set_opts[@]}"; do
-        setopt "$opt"
-      done
-      unset opt set_opts
-
+    initExtra = ''
       if [ -f "$HOME/.p10k.zsh" ]; then
         source "$HOME/.p10k.zsh"
       fi
