@@ -3,6 +3,7 @@
     enable = true;
     signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH";
     signing.signByDefault = true;
+    signing.format = "openpgp";
     settings = {
       user = {
         name = "Andrii Olkhovych";

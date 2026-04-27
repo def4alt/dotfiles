@@ -23,19 +23,10 @@ in {
     };
   };
 
-  # Expose path first, then load value in shell init
+  # Expose path first so shell startup stays light
   home.sessionVariables = {
     OPENCODE_API_KEY_FILE = opencodeSecretPath;
     OPENROUTER_API_KEY_FILE = openrouterSecretPath;
   };
 
-  programs.zsh.initContent = ''
-    if [ -f "$OPENCODE_API_KEY_FILE" ]; then
-      export OPENCODE_API_KEY="$(cat "$OPENCODE_API_KEY_FILE")"
-    fi
-
-    if [ -f "$OPENROUTER_API_KEY_FILE" ]; then
-      export OPENROUTER_API_KEY="$(cat "$OPENROUTER_API_KEY_FILE")"
-    fi
-  '';
 }

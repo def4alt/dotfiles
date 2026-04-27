@@ -37,9 +37,9 @@
   homebrew = {
     enable = true;
     brews = [
-      "direnv"
       "firebase-cli"
       "anomalyco/tap/opencode"
+      "colima"
     ];
     casks = [
       "1password"
@@ -59,6 +59,7 @@
       "visual-studio-code"
       "antigravity"
       "zotero"
+      "minecraft"
     ];
     taps = [
       "anomalyco/tap"
@@ -134,6 +135,29 @@
     controlcenter.FocusModes = false;
     controlcenter.NowPlaying = false;
     controlcenter.Sound = false;
+    CustomUserPreferences = {
+      "com.apple.symbolichotkeys" = {
+        AppleSymbolicHotKeys = {
+          "60" = {
+            # Disable '^ + Space' for selecting the previous input source
+            enabled = false;
+          };
+          "61" = {
+            # Disable '^ + Option + Space' for selecting the next input source
+            enabled = false;
+          };
+          # Disable 'Cmd + Space' for Spotlight Search
+          "64" = {
+            enabled = false;
+          };
+          # Disable 'Cmd + Alt + Space' for Finder search window
+          "65" = {
+            # Set to false to disable
+            enabled = true;
+          };
+        };
+      };
+    };
     menuExtraClock.Show24Hour = true;
     menuExtraClock.ShowDate = 1;
     menuExtraClock.ShowDayOfMonth = true;
@@ -141,20 +165,8 @@
     menuExtraClock.ShowSeconds = true;
     trackpad.ActuationStrength = 0;
     trackpad.Clicking = true;
-
-    CustomUserPreferences = {
-      "com.apple.symbolichotkeys" = {
-        AppleSymbolicHotKeys = {
-          "60" = {
-            enabled = false;
-          };
-          "61" = {
-            enabled = false;
-          };
-        };
-      };
-    };
   };
+
 
   users.users.def4alt = {
     name = "${username}";

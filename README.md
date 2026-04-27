@@ -5,8 +5,7 @@ experience across devices. Managed by Nix.
 
 ## Contents
 
-- zsh with customized [Oh My Posh](https://ohmyposh.dev/) theme and
-  [zinit](https://github.com/zdharma-continuum/zinit) plugin manager
+- zsh with customised [Powerlevel10k](https://github.com/romkatv/powerlevel10k) prompt and native Home Manager integrations
 - [Alacritty](https://alacritty.org/)
 - Neovim with [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
 - Tmux with [tpm](https://github.com/tmux-plugins/tpm)

@@ -1,7 +1,0 @@
-theme = tokyonight
-font-size = 18
-keybind = global:control+a=toggle_quick_terminal
-font-family = "JetBrains Mono"
-mouse-hide-while-typing = true
-window-padding-x = 10
-window-padding-y = 4
