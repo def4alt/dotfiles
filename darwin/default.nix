@@ -59,6 +59,7 @@
       "visual-studio-code"
       "antigravity"
       "zotero"
+      "zed"
       "minecraft"
     ];
     taps = [
