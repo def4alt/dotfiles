@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
@@ -24,7 +25,11 @@
     inherit (self) outputs;
     stateVersion = "24.11";
     helper = import ./lib {inherit inputs outputs stateVersion;};
-    overlays = [];
+    overlays = [
+      (final: prev: {
+        neovim-unwrapped = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.neovim-unwrapped;
+      })
+    ];
     inherit (helper.forAllSystems (system: nixpkgs.legacyPackages.${system}.stdenv)) isLinux;
   in {
     homeConfigurations =
