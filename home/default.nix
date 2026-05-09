@@ -78,12 +78,14 @@ in {
     enable = true;
     enableCompletion = false;
 
-    initExtra = ''
+    initContent = ''
       if [ -f "$HOME/.p10k.zsh" ]; then
         source "$HOME/.p10k.zsh"
       fi
 
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+
+      export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
     '';
   };
 
