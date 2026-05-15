@@ -120,12 +120,23 @@
   }];
 
   # ── Cloudflare Tunnel ──────────────────────────────────────
+  environment.etc."cloudflared/config.yml" = {
+    text = ''
+      tunnel: 2cb58440-fe33-4724-97ec-127086415088
+      credentials-file: /etc/cloudflared/2cb58440-fe33-4724-97ec-127086415088.json
+      ingress:
+        - hostname: matrix.def4alt.com
+          service: http://localhost:8008
+        - service: http_status:404
+    '';
+  };
+
   systemd.services.cloudflared-tunnel = {
     description = "Cloudflare Tunnel for matrix.def4alt.com";
     after = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel run --protocol auto 2cb58440-fe33-4724-97ec-127086415088'';
+      ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel run --config /etc/cloudflared/config.yml'';
       Restart = "always";
       RestartSec = "10";
     };
