@@ -147,7 +147,7 @@
     description = "Hermes Gateway";
     after = [ "network-online.target" "docker.service" "hermes-env.service" "matrix-synapse.service" ];
     wants = [ "network-online.target" ];
-    requiresMountsFor = [ "/srv/hermes-data" ];
+    unitConfig.RequiresMountsFor = "/srv/hermes-data";
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
