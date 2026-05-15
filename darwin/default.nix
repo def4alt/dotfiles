@@ -39,13 +39,12 @@
     brews = [
       "firebase-cli"
       "anomalyco/tap/opencode"
-      "colima"
     ];
     casks = [
+      "orbstack"
       "1password"
       "obsidian"
       "zen"
-      "raycast"
       "rectangle"
       "signal"
       "zoom"
@@ -56,9 +55,6 @@
       "anki"
       "topnotch"
       "tailscale-app"
-      "visual-studio-code"
-      "antigravity"
-      "zotero"
       "zed"
       "minecraft"
     ];

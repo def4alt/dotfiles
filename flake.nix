@@ -14,6 +14,8 @@
     };
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -49,6 +51,22 @@
         platform = "aarch64-darwin";
         inherit overlays;
       };
+    };
+
+    nixosConfigurations.zorya = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs outputs;
+        hostname = "zorya";
+        username = "def4alt";
+        stateVersion = "24.11";
+      };
+      modules = [
+        {
+          nixpkgs.overlays = overlays;
+        }
+        ./nixos/zorya
+      ];
     };
 
     formatter =
