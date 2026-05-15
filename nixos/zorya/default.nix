@@ -181,8 +181,8 @@
       ExecStartPre = "-${pkgs.docker}/bin/docker rm -f hermes";
       ExecStart = ''${pkgs.docker}/bin/docker run --name hermes \
         --rm \
+        --network host \
         --shm-size=1g \
-        -p 127.0.0.1:8642:8642 \
         -v /srv/hermes-data:/opt/data \
         --env-file /srv/hermes-data/.hermes/.env \
         nousresearch/hermes-agent:latest gateway run'';
