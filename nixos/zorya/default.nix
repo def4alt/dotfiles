@@ -16,6 +16,9 @@
     defaultSopsFile = ./secrets.yaml;
     age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
     secrets = {
+      def4alt-password-hash = {
+        neededForUsers = true;
+      };
       gh-token = {};
       opencode-go-api-key = {};
       groq-api-key = {};
@@ -98,6 +101,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "networkmanager" ];
     shell = pkgs.zsh;
+    hashedPasswordFile = config.sops.secrets.def4alt-password-hash.path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH"
     ];
@@ -125,13 +129,9 @@
     description = "Write Hermes .env from SOPS secrets";
     before = [ "hermes-agent.service" ];
     requiredBy = [ "hermes-agent.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = username;
-      Group = username;
-    };
+    serviceConfig.Type = "oneshot";
     script = ''
-      mkdir -p /srv/hermes-data/.hermes
+      install -d -m 0755 /srv/hermes-data/.hermes
       cat > /srv/hermes-data/.hermes/.env << EOF
       GH_TOKEN=$(cat ${config.sops.secrets.gh-token.path})
       OPENCODE_GO_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
@@ -142,6 +142,8 @@
       MATRIX_ALLOWED_USERS=@def4alt:zorya
       MATRIX_RECOVERY_KEY=$(cat ${config.sops.secrets.matrix-recovery-key.path})
       EOF
+      chown ${username}:users /srv/hermes-data/.hermes/.env
+      chmod 0600 /srv/hermes-data/.hermes/.env
     '';
   };
 
