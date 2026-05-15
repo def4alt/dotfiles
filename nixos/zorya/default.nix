@@ -159,12 +159,11 @@
       OPENCODE_GO_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
       OPENCODE_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
       GROQ_API_KEY=$(cat ${config.sops.secrets.groq-api-key.path})
-      MATRIX_HOMESERVER=http://127.0.0.1:8008
+      MATRIX_HOMESERVER=https://matrix.def4alt.com
       MATRIX_USER_ID=@hermes-bot:zorya
       MATRIX_ACCESS_TOKEN=$(cat ${config.sops.secrets.matrix-access-token.path})
       MATRIX_ALLOWED_USERS=@def4alt:zorya
       MATRIX_ENCRYPTION=false
-      MATRIX_RECOVERY_KEY=$(cat ${config.sops.secrets.matrix-recovery-key.path})
       EOF
       chown ${username}:users /srv/hermes-data/.hermes/.env
       chmod 0600 /srv/hermes-data/.hermes/.env
