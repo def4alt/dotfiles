@@ -5,9 +5,12 @@
   username,
   hostname,
   stateVersion,
+  platform,
   ...
-}: let
-  inherit (pkgs.stdenv) isDarwin isLinux;
+}:
+let
+  isDarwin = lib.hasSuffix "darwin" platform;
+  isLinux = lib.hasSuffix "linux" platform;
 in {
   home = {
     inherit stateVersion username;
