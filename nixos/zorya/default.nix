@@ -180,11 +180,13 @@
       {
         # Linux-specific overrides — macOS git module uses 1Password which doesn't exist here
         programs.git = {
-          signing.signByDefault = false;
-          signing.format = null;
+          signing = {
+            signByDefault = lib.mkForce false;
+            format = lib.mkForce null;
+          };
           settings.gpg = lib.mkForce {
             format = "ssh";
-            ssh.program = null; # uses default ssh-agent
+            ssh.program = null;
           };
         };
         # Disable macOS-only modules on Linux
