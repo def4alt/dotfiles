@@ -186,7 +186,6 @@
           };
           settings.gpg = lib.mkForce {
             format = "ssh";
-            ssh.program = null;
           };
         };
         # Disable macOS-only modules on Linux
