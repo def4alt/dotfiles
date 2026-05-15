@@ -72,7 +72,6 @@
 
     matrix-synapse = {
       enable = true;
-      data_dir = "/var/lib/matrix-synapse";
       settings = {
         server_name = "zorya";
         listeners = [{
@@ -86,10 +85,6 @@
             compress = false;
           }];
         }];
-        database = {
-          name = "sqlite3";
-          args.database = "/var/lib/matrix-synapse/homeserver.db";
-        };
         suppress_key_server_warning = true;
         trusted_key_servers = [{ server_name = "matrix.org"; }];
       };
