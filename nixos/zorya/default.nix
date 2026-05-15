@@ -195,9 +195,9 @@
         };
         programs.zsh.enable = true;
         # Use nixos-rebuild instead of darwin-rebuild
-        home.shellAliases.update = ''
-          sudo nixos-rebuild switch --flake "$HOME/dotfiles#zorya"
-        '';
+        home.shellAliases = lib.mkForce {
+          update = ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#zorya"'';
+        };
       }
     ];
     extraSpecialArgs = {
