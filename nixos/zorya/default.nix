@@ -188,6 +188,7 @@
       MATRIX_ACCESS_TOKEN=$(cat ${config.sops.secrets.matrix-access-token.path})
       MATRIX_ALLOWED_USERS=@def4alt:zorya
       MATRIX_ENCRYPTION=false
+      MATRIX_REQUIRE_MENTION=false
       EOF
       chown ${username}:users /srv/hermes-data/.hermes/.env
       chmod 0600 /srv/hermes-data/.hermes/.env
