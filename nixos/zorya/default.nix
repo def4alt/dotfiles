@@ -102,6 +102,12 @@
         }];
         suppress_key_server_warning = true;
         trusted_key_servers = [{ server_name = "matrix.org"; }];
+        rc_message.rc_per_second = 100;
+        rc_message.burst_count = 200;
+        rc_registration.per_second = 100;
+        rc_registration.burst_count = 200;
+        rc_login.per_second = 100;
+        rc_login.burst_count = 200;
         registration_shared_secret_path = config.sops.secrets.matrix-registration-secret.path;
       };
     };
