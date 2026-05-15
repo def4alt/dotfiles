@@ -73,15 +73,23 @@
     };
     openssh.enable = true;
 
-    postgresql.enable = true;
+    postgresql = {
+      enable = true;
+      ensureDatabases = [ "matrix-synapse" ];
+      ensureUsers = [{
+        name = "matrix-synapse";
+        ensureDBOwnership = true;
+      }];
+    };
 
     matrix-synapse = {
       enable = true;
       settings = {
         server_name = "zorya";
+        public_baseurl = "https://matrix.def4alt.com/";
         listeners = [{
           port = 8008;
-          bind_addresses = [ "0.0.0.0" "::" ];
+          bind_addresses = [ "::" ];
           type = "http";
           tls = false;
           x_forwarded = true;
