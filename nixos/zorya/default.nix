@@ -175,9 +175,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.${username} = lib.mkMerge [
-      (import ../../home)
-    ];
+    users.${username} = import ../../home;
     extraSpecialArgs = {
       inherit inputs outputs hostname username stateVersion;
       platform = "x86_64-linux";
