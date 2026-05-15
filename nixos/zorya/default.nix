@@ -185,6 +185,12 @@
             ssh.program = null; # uses default ssh-agent
           };
         };
+        # Disable macOS-only modules on Linux
+        programs.ghostty = lib.mkForce {
+          enable = false;
+          systemd.enable = false;
+        };
+        programs.zsh.enable = true;
         # Use nixos-rebuild instead of darwin-rebuild
         home.shellAliases.update = ''
           sudo nixos-rebuild switch --flake "$HOME/dotfiles#zorya"
