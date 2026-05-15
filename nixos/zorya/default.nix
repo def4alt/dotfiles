@@ -5,6 +5,7 @@
   # Credentials are stored in secrets.yaml (sops-encrypted)
 
   imports = [
+    ./hardware-configuration.nix
     inputs.disko.nixosModules.disko
     ./disko.nix
     inputs.sops-nix.nixosModules.sops
