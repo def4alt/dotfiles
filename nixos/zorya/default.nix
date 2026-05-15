@@ -177,28 +177,6 @@
     useUserPackages = true;
     users.${username} = lib.mkMerge [
       (import ../../home)
-      {
-        # Linux-specific overrides — macOS git module uses 1Password which doesn't exist here
-        programs.git = {
-          signing = {
-            signByDefault = lib.mkForce false;
-            format = lib.mkForce null;
-          };
-          settings.gpg = lib.mkForce {
-            format = "ssh";
-          };
-        };
-        # Disable macOS-only modules on Linux
-        programs.ghostty = lib.mkForce {
-          enable = false;
-          systemd.enable = false;
-        };
-        programs.zsh.enable = true;
-        # Use nixos-rebuild instead of darwin-rebuild
-        home.shellAliases = lib.mkForce {
-          update = ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#zorya"'';
-        };
-      }
     ];
     extraSpecialArgs = {
       inherit inputs outputs hostname username stateVersion;
