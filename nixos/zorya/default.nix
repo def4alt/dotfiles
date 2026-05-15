@@ -59,7 +59,9 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ cloudflared ];
+  virtualisation.docker.enable = true;
+
+  environment.systemPackages = with pkgs; [ cloudflared mosh ];
 
   services = {
     tailscale = {
@@ -67,7 +69,6 @@
       authKeyFile = config.sops.secrets.tailscale-auth-key.path;
     };
     openssh.enable = true;
-    docker.enable = true;
 
     matrix-synapse = {
       enable = true;
