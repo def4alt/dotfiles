@@ -186,9 +186,8 @@
         --shm-size=1g \
         -v /srv/hermes-data:/opt/data \
         --env-file /srv/hermes-data/.hermes/.env \
-        --entrypoint bash \
-        nousresearch/hermes-agent:latest \
-        -c 'source /opt/hermes/.venv/bin/activate && uv pip install "mautrix[encryption]==0.21.0" -q && exec gateway run' '';
+        hermes-mautrix:latest \
+        gateway run'';
       ExecStop = "${pkgs.docker}/bin/docker stop hermes";
       ExecStopPost = "-${pkgs.docker}/bin/docker rm -f hermes";
       Restart = "always";
