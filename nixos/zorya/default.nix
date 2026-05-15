@@ -63,6 +63,8 @@
 
   environment.systemPackages = with pkgs; [ cloudflared mosh ];
 
+  programs.zsh.enable = true;
+
   services = {
     tailscale = {
       enable = true;
