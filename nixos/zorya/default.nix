@@ -21,7 +21,9 @@
       groq-api-key = {};
       matrix-access-token = {};
       matrix-recovery-key = {};
-      matrix-registration-secret = {};
+      matrix-registration-secret = {
+        owner = "matrix-synapse";
+      };
       tailscale-auth-key = {};
       cloudflared-credentials = {
         path = "/etc/cloudflared/2cb58440-fe33-4724-97ec-127086415088.json";
