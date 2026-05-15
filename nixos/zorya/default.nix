@@ -16,9 +16,6 @@
     defaultSopsFile = ./secrets.yaml;
     age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
     secrets = {
-      def4alt-password-hash = {
-        neededForUsers = true;
-      };
       gh-token = {};
       opencode-go-api-key = {};
       groq-api-key = {};
@@ -101,7 +98,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "networkmanager" ];
     shell = pkgs.zsh;
-    hashedPasswordFile = config.sops.secrets.def4alt-password-hash.path;
+    hashedPassword = "$6$0Qwkk0hxmmYhES3K$vPy85rX1OjEq1hwAr97d30uVSd8TVRF88ghPAfGEn49CRPrzSsr5GmTRaf4bcVuZMH8BvyFdvM9ZPouI3B6q31";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH"
     ];
