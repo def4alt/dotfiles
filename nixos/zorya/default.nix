@@ -134,9 +134,10 @@
   systemd.services.cloudflared-tunnel = {
     description = "Cloudflare Tunnel for matrix.def4alt.com";
     after = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target"];
     serviceConfig = {
-      ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel run --config /etc/cloudflared/config.yml'';
+      ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run'';
       Restart = "always";
       RestartSec = "10";
     };
@@ -190,7 +191,6 @@
   };
 
   system.stateVersion = stateVersion;
-  nixpkgs.hostPlatform = "x86_64-linux";
 
   # ── Home Manager ────────────────────────────────────────────
   home-manager = {

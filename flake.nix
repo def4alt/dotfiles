@@ -29,7 +29,7 @@
     helper = import ./lib {inherit inputs outputs stateVersion;};
     overlays = [
       (final: prev: {
-        neovim-unwrapped = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.neovim-unwrapped;
+        neovim-unwrapped = inputs.nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.neovim-unwrapped;
       })
     ];
     inherit (helper.forAllSystems (system: nixpkgs.legacyPackages.${system}.stdenv)) isLinux;
