@@ -73,6 +73,8 @@
     };
     openssh.enable = true;
 
+    postgresql.enable = true;
+
     matrix-synapse = {
       enable = true;
       settings = {
