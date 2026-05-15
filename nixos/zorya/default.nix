@@ -100,6 +100,7 @@
         }];
         suppress_key_server_warning = true;
         trusted_key_servers = [{ server_name = "matrix.org"; }];
+        registration_shared_secret_path = config.sops.secrets.matrix-registration-secret.path;
       };
     };
   };
