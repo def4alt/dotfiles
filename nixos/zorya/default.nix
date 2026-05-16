@@ -214,7 +214,7 @@
     extraDependencyGroups = [ "matrix" ];
     addToSystemPackages = false;
     settings = {
-      model.default = "deepseek-v4-flash:xhigh";
+      model.default = "deepseek-v4-flash";
       model.provider = "opencode-go";
       terminal.cwd = "/var/lib/hermes/workspace";
       plugins.enabled = [];
