@@ -211,8 +211,10 @@
   # ── Hermes Agent (NixOS module) ───────────────────────────────
   services.hermes-agent = {
     enable = true;
-    extraDependencyGroups = [ "matrix" ];
-    addToSystemPackages = false;
+    container.enable = true;
+    container.hostUsers = [ "${username}" ];
+    extraDependencyGroups = [ "matrix" "voice" ];
+    addToSystemPackages = true;
     stateDir = "/srv/hermes-data";
     settings = {
       model.default = "deepseek-v4-flash";
