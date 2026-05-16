@@ -213,6 +213,7 @@
   services.hermes-agent = {
     enable = true;
     container.enable = true;
+    container.image = "ubuntu:26.04";
     container.hostUsers = [ "${username}" ];
     container.extraOptions = [ "--env-file" config.sops.secrets."gh-token-env".path ];
     extraDependencyGroups = [ "matrix" "voice" ];
