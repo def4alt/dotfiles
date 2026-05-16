@@ -221,6 +221,7 @@
       model.provider = "opencode-go";
       terminal.cwd = "/data/workspace";
       agent.restart_drain_timeout = 60;
+      autonomy.shell_env_passthrough = [ "GH_TOKEN" "GITHUB_TOKEN" ];
     };
     environmentFiles = [ config.sops.secrets.hermes-env.path ];
     restartSec = 5;
