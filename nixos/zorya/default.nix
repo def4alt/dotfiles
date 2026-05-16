@@ -189,7 +189,7 @@
 
       [providers.models.opencode]
       kind = "openai-compatible"
-      base_url = "https://opencode.ai/zen/go/v1"
+      base_url = "https://opencode.ai/zen/go/v1/chat/completions"
       model = "deepseek-v4-flash"
       api_key = "$OPENCODE_KEY"
 
