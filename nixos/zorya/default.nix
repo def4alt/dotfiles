@@ -213,10 +213,11 @@
     enable = true;
     extraDependencyGroups = [ "matrix" ];
     addToSystemPackages = false;
+    stateDir = "/srv/hermes-data";
     settings = {
       model.default = "deepseek-v4-flash";
       model.provider = "opencode-go";
-      terminal.cwd = "/var/lib/hermes/workspace";
+      terminal.cwd = "/srv/hermes-data/workspace";
       plugins.enabled = [];
       agent.restart_drain_timeout = 60;
     };
