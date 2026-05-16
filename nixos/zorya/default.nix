@@ -218,7 +218,6 @@
       model.default = "deepseek-v4-flash";
       model.provider = "opencode-go";
       terminal.cwd = "/srv/hermes-data/workspace";
-      plugins.enabled = [];
       agent.restart_drain_timeout = 60;
     };
     environmentFiles = [ config.sops.secrets.hermes-env.path ];
