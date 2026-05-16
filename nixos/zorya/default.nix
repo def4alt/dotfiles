@@ -189,9 +189,11 @@
       MATRIX_ALLOWED_USERS=@def4alt:zorya
       MATRIX_ENCRYPTION=false
       MATRIX_REQUIRE_MENTION=false
+      HERMES_INFERENCE_PROVIDER=opencode-go
+      HERMES_DEFAULT_MODEL=deepseek-v4-flash:xhigh
       EOF
-      chown ${username}:users /srv/hermes-data/.hermes/.env
-      chmod 0600 /srv/hermes-data/.hermes/.env
+      chown 10000:10000 /srv/hermes-data/.hermes/.env
+      chmod 0640 /srv/hermes-data/.hermes/.env
     '';
   };
 
