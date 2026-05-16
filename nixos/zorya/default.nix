@@ -19,9 +19,6 @@
       gh-token = {};
       opencode-go-api-key = {};
       groq-api-key = {};
-      matrix-access-token = {};
-      matrix-recovery-key = {};
-      hermes-access-token = {};
       hermes-env = {
         format = "yaml";
       };
@@ -145,64 +142,6 @@
     wantedBy = [ "multi-user.target"];
     serviceConfig = {
       ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run'';
-      Restart = "always";
-      RestartSec = "10";
-    };
-  };
-
-  # ── ZeroClaw env generator ──────────────────────────────────
-  systemd.services.zeroclaw-env = {
-    description = "Write ZeroClaw config.toml from SOPS secrets";
-    before = [ "zeroclaw.service" ];
-    requiredBy = [ "zeroclaw.service" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      install -d -m 0755 /srv/hermes-data/zeroclaw/.zeroclaw
-
-      OPENCODE_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
-      MATRIX_TOKEN=$(cat ${config.sops.secrets.matrix-access-token.path})
-
-      # Patch the api_key and access_token into the config
-      cat > /srv/hermes-data/zeroclaw/.zeroclaw/config.toml << ZC_EOF
-      [providers]
-      fallback = "opencode-go"
-
-      [providers.models.opencode-go]
-      kind = "opencode-go"
-      model = "deepseek-v4-flash"
-      api_key = "$OPENCODE_KEY"
-
-      [channels.matrix]
-      enabled = true
-      homeserver = "http://127.0.0.1:8008"
-      access_token = "$MATRIX_TOKEN"
-      user_id = "@zero:zorya"
-      device_id = "ZEROCLAW01"
-      allowed_users = ["@def4alt:zorya"]
-      ZC_EOF
-
-      chown 65534:65534 /srv/hermes-data/zeroclaw/.zeroclaw/config.toml
-      chmod 600 /srv/hermes-data/zeroclaw/.zeroclaw/config.toml
-    '';
-  };
-
-  # ── ZeroClaw agent container ────────────────────────────────
-  systemd.services.zeroclaw = {
-    description = "ZeroClaw agent";
-    after = [ "network-online.target" "docker.service" "zeroclaw-env.service" "matrix-synapse.service" ];
-    wants = [ "network-online.target" ];
-    unitConfig.RequiresMountsFor = "/srv/hermes-data";
-    wantedBy = [ "multi-user.target" ];
-
-    serviceConfig = {
-      ExecStartPre = "-${pkgs.docker}/bin/docker rm -f zeroclaw";
-      ExecStart = ''${pkgs.docker}/bin/docker run --name zeroclaw \
-        --rm \
-        --network host \
-        -v /srv/hermes-data/zeroclaw:/zeroclaw-data \
-        ghcr.io/zeroclaw-labs/zeroclaw:latest'';
-      ExecStop = "${pkgs.docker}/bin/docker stop zeroclaw";
-      ExecStopPost = "-${pkgs.docker}/bin/docker rm -f zeroclaw";
       Restart = "always";
       RestartSec = "10";
     };
