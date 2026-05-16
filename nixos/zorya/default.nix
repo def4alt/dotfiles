@@ -193,6 +193,7 @@
       api_key = "$OPENCODE_KEY"
 
       [channels.matrix]
+      enabled = true
       homeserver = "http://127.0.0.1:8008"
       access_token = "$MATRIX_TOKEN"
       user_id = "@zero:zorya"
