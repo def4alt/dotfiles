@@ -185,11 +185,10 @@
       # Patch the api_key and access_token into the config
       cat > /srv/hermes-data/zeroclaw/.zeroclaw/config.toml << ZC_EOF
       [providers]
-      fallback = "opencode"
+      fallback = "opencode-go"
 
-      [providers.models.opencode]
-      kind = "openai-compatible"
-      base_url = "https://opencode.ai/zen/go/v1/chat/completions"
+      [providers.models.opencode-go]
+      kind = "opencode-go"
       model = "deepseek-v4-flash"
       api_key = "$OPENCODE_KEY"
 
