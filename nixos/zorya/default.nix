@@ -170,53 +170,59 @@
     };
   };
 
-  # ── Hermes env generator ────────────────────────────────────
-  systemd.services.hermes-env = {
-    description = "Write Hermes .env from SOPS secrets";
-    before = [ "hermes-agent.service" ];
-    requiredBy = [ "hermes-agent.service" ];
+  # ── ZeroClaw env generator ──────────────────────────────────
+  systemd.services.zeroclaw-env = {
+    description = "Write ZeroClaw config.toml from SOPS secrets";
+    before = [ "zeroclaw.service" ];
+    requiredBy = [ "zeroclaw.service" ];
     serviceConfig.Type = "oneshot";
     script = ''
-      install -d -m 0755 /srv/hermes-data/.hermes
-      cat > /srv/hermes-data/.hermes/.env << EOF
-      GH_TOKEN=$(cat ${config.sops.secrets.gh-token.path})
-      OPENCODE_GO_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
-      OPENCODE_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
-      GROQ_API_KEY=$(cat ${config.sops.secrets.groq-api-key.path})
-      MATRIX_HOMESERVER=http://127.0.0.1:8008
-      MATRIX_USER_ID=@hermes:zorya
-      MATRIX_ACCESS_TOKEN=$(cat ${config.sops.secrets.matrix-access-token.path})
-      MATRIX_ALLOWED_USERS=@def4alt:zorya
-      MATRIX_ENCRYPTION=false
-      MATRIX_REQUIRE_MENTION=false
-      HERMES_INFERENCE_PROVIDER=opencode-go
-      HERMES_DEFAULT_MODEL=deepseek-v4-flash:xhigh
-      EOF
-      chown 10000:10000 /srv/hermes-data/.hermes/.env
-      chmod 0640 /srv/hermes-data/.hermes/.env
+      install -d -m 0755 /srv/hermes-data/zeroclaw/.zeroclaw
+
+      OPENCODE_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
+      MATRIX_TOKEN=$(cat ${config.sops.secrets.matrix-access-token.path})
+
+      # Patch the api_key and access_token into the config
+      cat > /srv/hermes-data/zeroclaw/.zeroclaw/config.toml << ZC_EOF
+      [providers]
+      fallback = "opencode"
+
+      [providers.models.opencode]
+      kind = "openai-compatible"
+      base_url = "https://opencode.ai/zen/go/v1"
+      model = "deepseek-v4-flash"
+      api_key = "$OPENCODE_KEY"
+
+      [channels.matrix]
+      homeserver = "http://127.0.0.1:8008"
+      access_token = "$MATRIX_TOKEN"
+      user_id = "@zero:zorya"
+      device_id = "ZEROCLAW01"
+      allowed_users = ["@def4alt:zorya"]
+      ZC_EOF
+
+      chown 65534:65534 /srv/hermes-data/zeroclaw/.zeroclaw/config.toml
+      chmod 600 /srv/hermes-data/zeroclaw/.zeroclaw/config.toml
     '';
   };
 
-  # ── Hermes Agent container ──────────────────────────────────
-  systemd.services.hermes-agent = {
-    description = "Hermes Gateway";
-    after = [ "network-online.target" "docker.service" "hermes-env.service" "matrix-synapse.service" ];
+  # ── ZeroClaw agent container ────────────────────────────────
+  systemd.services.zeroclaw = {
+    description = "ZeroClaw agent";
+    after = [ "network-online.target" "docker.service" "zeroclaw-env.service" "matrix-synapse.service" ];
     wants = [ "network-online.target" ];
     unitConfig.RequiresMountsFor = "/srv/hermes-data";
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
-      ExecStartPre = "-${pkgs.docker}/bin/docker rm -f hermes";
-      ExecStart = ''${pkgs.docker}/bin/docker run --name hermes \
+      ExecStartPre = "-${pkgs.docker}/bin/docker rm -f zeroclaw";
+      ExecStart = ''${pkgs.docker}/bin/docker run --name zeroclaw \
         --rm \
         --network host \
-        --shm-size=1g \
-        -v /srv/hermes-data:/opt/data \
-        --env-file /srv/hermes-data/.hermes/.env \
-        hermes-mautrix:latest \
-        gateway run'';
-      ExecStop = "${pkgs.docker}/bin/docker stop hermes";
-      ExecStopPost = "-${pkgs.docker}/bin/docker rm -f hermes";
+        -v /srv/hermes-data/zeroclaw:/zeroclaw-data \
+        ghcr.io/zeroclaw-labs/zeroclaw:latest'';
+      ExecStop = "${pkgs.docker}/bin/docker stop zeroclaw";
+      ExecStopPost = "-${pkgs.docker}/bin/docker rm -f zeroclaw";
       Restart = "always";
       RestartSec = "10";
     };
