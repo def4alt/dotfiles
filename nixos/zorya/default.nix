@@ -216,8 +216,12 @@
     settings = {
       model.default = "deepseek-v4-flash:xhigh";
       model.provider = "opencode-go";
+      terminal.cwd = "/var/lib/hermes/workspace";
+      plugins.enabled = [];
+      agent.restart_drain_timeout = 60;
     };
     environmentFiles = [ config.sops.secrets.hermes-env.path ];
+    restartSec = 5;
   };
 
   system.stateVersion = stateVersion;
