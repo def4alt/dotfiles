@@ -22,6 +22,9 @@
       matrix-access-token = {};
       matrix-recovery-key = {};
       hermes-access-token = {};
+      hermes-env = {
+        format = "yaml";
+      };
       matrix-registration-secret = {
         owner = "matrix-synapse";
       };
@@ -205,56 +208,16 @@
     };
   };
 
-  # ── Hermes env generator ────────────────────────────────────
-  systemd.services.hermes-env = {
-    description = "Write Hermes .env from SOPS secrets";
-    before = [ "hermes-agent.service" ];
-    requiredBy = [ "hermes-agent.service" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      install -d -m 0755 /srv/hermes-data/.hermes
-      cat > /srv/hermes-data/.hermes/.env << EOF
-      GH_TOKEN=$(cat ${config.sops.secrets.gh-token.path})
-      OPENCODE_GO_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
-      OPENCODE_API_KEY=$(cat ${config.sops.secrets.opencode-go-api-key.path})
-      GROQ_API_KEY=$(cat ${config.sops.secrets.groq-api-key.path})
-      MATRIX_HOMESERVER=http://127.0.0.1:8008
-      MATRIX_USER_ID=@hermes:zorya
-      MATRIX_ACCESS_TOKEN=$(cat ${config.sops.secrets.hermes-access-token.path})
-      MATRIX_ALLOWED_USERS=@def4alt:zorya
-      MATRIX_ENCRYPTION=false
-      MATRIX_REQUIRE_MENTION=false
-      HERMES_INFERENCE_PROVIDER=opencode-go
-      HERMES_DEFAULT_MODEL=deepseek-v4-flash:xhigh
-      EOF
-      chown 10000:10000 /srv/hermes-data/.hermes/.env
-      chmod 0640 /srv/hermes-data/.hermes/.env
-    '';
-  };
-
-  # ── Hermes Agent container ──────────────────────────────────
-  systemd.services.hermes-agent = {
-    description = "Hermes Gateway";
-    after = [ "network-online.target" "docker.service" "hermes-env.service" "matrix-synapse.service" ];
-    wants = [ "network-online.target" ];
-    unitConfig.RequiresMountsFor = "/srv/hermes-data";
-    wantedBy = [ "multi-user.target" ];
-
-    serviceConfig = {
-      ExecStartPre = "-${pkgs.docker}/bin/docker rm -f hermes";
-      ExecStart = ''${pkgs.docker}/bin/docker run --name hermes \
-        --rm \
-        --network host \
-        --shm-size=1g \
-        -v /srv/hermes-data:/opt/data \
-        --env-file /srv/hermes-data/.hermes/.env \
-        hermes-mautrix:latest \
-        gateway run'';
-      ExecStop = "${pkgs.docker}/bin/docker stop hermes";
-      ExecStopPost = "-${pkgs.docker}/bin/docker rm -f hermes";
-      Restart = "always";
-      RestartSec = "10";
+  # ── Hermes Agent (NixOS module) ───────────────────────────────
+  services.hermes-agent = {
+    enable = true;
+    extraDependencyGroups = [ "matrix" ];
+    addToSystemPackages = false;
+    settings = {
+      model.default = "deepseek-v4-flash:xhigh";
+      model.provider = "opencode-go";
     };
+    environmentFiles = [ config.sops.secrets.hermes-env.path ];
   };
 
   system.stateVersion = stateVersion;
