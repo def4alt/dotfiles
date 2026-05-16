@@ -102,30 +102,6 @@
         }];
         suppress_key_server_warning = true;
         trusted_key_servers = [{ server_name = "matrix.org"; }];
-        rc_message = {
-          per_second = 100;
-          burst_count = 200;
-        };
-        rc_registration = {
-          per_second = 100;
-          burst_count = 200;
-        };
-        rc_login = {
-          per_second = 100;
-          burst_count = 200;
-        };
-        rc_admin_redaction = {
-          per_second = 100;
-          burst_count = 200;
-        };
-        rc_joins = {
-          per_second = 100;
-          burst_count = 200;
-        };
-        rc_joins_local = {
-          per_second = 100;
-          burst_count = 200;
-        };
         registration_shared_secret_path = config.sops.secrets.matrix-registration-secret.path;
       };
     };
