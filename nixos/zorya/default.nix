@@ -214,7 +214,7 @@
     enable = true;
     container.enable = true;
     container.hostUsers = [ "${username}" ];
-    container.extraOptions = [ "--env-file", config.sops.secrets."gh-token-env".path ];
+    container.extraOptions = [ "--env-file" config.sops.secrets."gh-token-env".path ];
     extraDependencyGroups = [ "matrix" "voice" ];
     addToSystemPackages = true;
     stateDir = "/srv/hermes-data";
