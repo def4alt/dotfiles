@@ -25,6 +25,7 @@
       hermes-env = {
         format = "yaml";
       };
+      gh-token-env = {};
       matrix-registration-secret = {
         owner = "matrix-synapse";
       };
@@ -213,6 +214,7 @@
     enable = true;
     container.enable = true;
     container.hostUsers = [ "${username}" ];
+    container.extraOptions = [ "--env-file", config.sops.secrets."gh-token-env".path ];
     extraDependencyGroups = [ "matrix" "voice" ];
     addToSystemPackages = true;
     stateDir = "/srv/hermes-data";
