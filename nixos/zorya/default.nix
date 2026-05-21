@@ -77,7 +77,7 @@
     openssh.enable = true;
 
     postgresql = {
-      enable = true;
+      enable = false;
       ensureDatabases = [ "matrix-synapse" ];
       ensureUsers = [{
         name = "matrix-synapse";
@@ -86,7 +86,7 @@
     };
 
     matrix-synapse = {
-      enable = true;
+      enable = false;
       settings = {
         server_name = "zorya";
         public_baseurl = "https://matrix.def4alt.com/";
@@ -149,7 +149,7 @@
 
   # ── Hermes Agent (NixOS module) ───────────────────────────────
   services.hermes-agent = {
-    enable = true;
+    enable = false;
     container.enable = true;
     container.image = "ubuntu:26.04";
     container.hostUsers = [ "${username}" ];
