@@ -42,6 +42,7 @@ in {
       devenv
     ] ++ lib.optionals isLinux [
       docker
+      opencode
     ];
 
     sessionPath = [ "$HOME/.npm-global/bin" ];
@@ -55,20 +56,14 @@ in {
     };
   };
 
-  # ── npm global tools: pi coding agent & opencode ───
-  home.activation.installNpmGlobalTools =
+  # ── npm global tool: pi coding agent ───
+  home.activation.installPiCodingAgent =
     lib.hm.dag.entryAfter ["writeBoundary"] ''
       export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
       mkdir -p "$HOME/.npm-global"
 
-      # pi coding agent
       if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
         npm install --location=global --prefix "$HOME/.npm-global" @earendil-works/pi-coding-agent
-      fi
-
-      # opencode
-      if [ ! -x "$HOME/.npm-global/bin/opencode" ]; then
-        npm install --location=global --prefix "$HOME/.npm-global" opencode-ai
       fi
     '';
 
