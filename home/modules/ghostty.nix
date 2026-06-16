@@ -3,7 +3,7 @@
     enable = true;
     package = null;
     settings = {
-      theme = "tokyonight";
+      theme = "Kanagawa Dragon";
       "font-size" = 18;
       "font-family" = "JetBrains Mono";
       "mouse-hide-while-typing" = true;
