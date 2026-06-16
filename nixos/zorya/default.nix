@@ -41,7 +41,7 @@
     networkmanager.enable = true;
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 ];
+      allowedTCPPorts = [ 22 80 443 ];
       allowedUDPPortRanges = [
         { from = 60000; to = 61000; } # Mosh
       ];
@@ -50,7 +50,7 @@
 
   virtualisation.docker.enable = true;
 
-  environment.systemPackages = with pkgs; [ mosh ];
+  environment.systemPackages = with pkgs; [ mosh kubectl ];
 
   programs.zsh.enable = true;
 
@@ -61,6 +61,26 @@
     };
     openssh.enable = true;
 
+    k3s = {
+      enable = true;
+      role = "server";
+      tokenFile = "/var/lib/rancher/k3s/server/token";
+      extraFlags = toString [
+        "--write-kubeconfig-mode \"0644\""
+        "--cluster-init"
+        "--disable servicelb"
+        "--disable traefik"
+        "--kubelet-arg=max-pods=150"
+        "--kube-apiserver-arg=event-ttl=72h"
+        "--etcd-arg=quota-backend-bytes=4294967296"
+        "--etcd-arg=auto-compaction-mode=periodic"
+        "--etcd-arg=auto-compaction-retention=24h"
+        "--etcd-snapshot-schedule-cron=0 */6 * * *"
+        "--etcd-snapshot-retention=28"
+        "--etcd-snapshot-compress"
+      ];
+      clusterInit = true;
+    };
   };
 
   users.users.${username} = {
