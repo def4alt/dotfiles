@@ -37,7 +37,6 @@
   homebrew = {
     enable = true;
     brews = [
-      "firebase-cli"
       "anomalyco/tap/opencode"
     ];
     casks = [
@@ -57,6 +56,12 @@
       "tailscale-app"
       "zed"
       "minecraft"
+      "zulu@8"
+      "netnewswire"
+      "prismlauncher"
+      "jellyfin-media-player"
+      "codex"
+      "wireshark-app"
     ];
     taps = [
       "anomalyco/tap"

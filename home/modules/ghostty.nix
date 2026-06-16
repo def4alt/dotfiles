@@ -12,6 +12,9 @@
       keybind = [ "shift+enter=text:\\x1b\\r" ];
       command = "zsh -lic \"tmux new-session -A -s main\"";
       "macos-titlebar-style" = "native";
+      clipboard-read = "allow";
+      clipboard-write = "allow";
+      copy-on-select = "clipboard";
     };
   };
 }

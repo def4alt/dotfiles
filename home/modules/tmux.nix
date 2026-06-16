@@ -17,6 +17,8 @@
       set -g renumber-windows on
       set -sg escape-time 0
 
+      set -g set-clipboard on
+
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -v -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"

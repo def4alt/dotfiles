@@ -1,9 +1,6 @@
 { config, lib, pkgs, inputs, outputs, hostname, username, stateVersion, ... }:
 
 {
-  # ── Cloudflare Tunnel ──
-  # Credentials are stored in secrets.yaml (sops-encrypted)
-
   imports = [
     ./hardware-configuration.nix
     inputs.disko.nixosModules.disko
@@ -16,19 +13,7 @@
     defaultSopsFile = ./secrets.yaml;
     age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
     secrets = {
-      gh-token = {};
-      opencode-go-api-key = {};
-      groq-api-key = {};
-      hermes-env = {
-        format = "yaml";
-      };
-      matrix-registration-secret = {
-        owner = "matrix-synapse";
-      };
       tailscale-auth-key = {};
-      cloudflared-credentials = {
-        path = "/etc/cloudflared/2cb58440-fe33-4724-97ec-127086415088.json";
-      };
     };
   };
 
@@ -65,7 +50,7 @@
 
   virtualisation.docker.enable = true;
 
-  environment.systemPackages = with pkgs; [ cloudflared mosh ];
+  environment.systemPackages = with pkgs; [ mosh ];
 
   programs.zsh.enable = true;
 
@@ -76,36 +61,6 @@
     };
     openssh.enable = true;
 
-    postgresql = {
-      enable = false;
-      ensureDatabases = [ "matrix-synapse" ];
-      ensureUsers = [{
-        name = "matrix-synapse";
-        ensureDBOwnership = true;
-      }];
-    };
-
-    matrix-synapse = {
-      enable = false;
-      settings = {
-        server_name = "zorya";
-        public_baseurl = "https://matrix.def4alt.com/";
-        listeners = [{
-          port = 8008;
-          bind_addresses = [ "0.0.0.0" ];
-          type = "http";
-          tls = false;
-          x_forwarded = true;
-          resources = [{
-            names = [ "client" "federation" ];
-            compress = false;
-          }];
-        }];
-        suppress_key_server_warning = true;
-        trusted_key_servers = [{ server_name = "matrix.org"; }];
-        registration_shared_secret_path = config.sops.secrets.matrix-registration-secret.path;
-      };
-    };
   };
 
   users.users.${username} = {
@@ -122,50 +77,6 @@
     device = "/swapfile";
     size = 2048;
   }];
-
-  # ── Cloudflare Tunnel ──────────────────────────────────────
-  environment.etc."cloudflared/config.yml" = {
-    text = ''
-      tunnel: 2cb58440-fe33-4724-97ec-127086415088
-      credentials-file: /etc/cloudflared/2cb58440-fe33-4724-97ec-127086415088.json
-      ingress:
-        - hostname: matrix.def4alt.com
-          service: http://localhost:8008
-        - service: http_status:404
-    '';
-  };
-
-  systemd.services.cloudflared-tunnel = {
-    description = "Cloudflare Tunnel for matrix.def4alt.com";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target"];
-    serviceConfig = {
-      ExecStart = ''${pkgs.cloudflared}/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run'';
-      Restart = "always";
-      RestartSec = "10";
-    };
-  };
-
-  # ── Hermes Agent (NixOS module) ───────────────────────────────
-  services.hermes-agent = {
-    enable = false;
-    container.enable = true;
-    container.image = "ubuntu:26.04";
-    container.hostUsers = [ "${username}" ];
-    extraDependencyGroups = [ "matrix" "voice" ];
-    addToSystemPackages = true;
-    stateDir = "/srv/hermes-data";
-    settings = {
-      model.default = "deepseek-v4-flash";
-      model.provider = "opencode-go";
-      terminal.cwd = "/data/workspace";
-      agent.restart_drain_timeout = 60;
-      autonomy.shell_env_passthrough = [ "GH_TOKEN" "GITHUB_TOKEN" ];
-    };
-    environmentFiles = [ config.sops.secrets.hermes-env.path ];
-    restartSec = 5;
-  };
 
   system.stateVersion = stateVersion;
 

@@ -40,23 +40,7 @@
           };
         };
       };
-      data = {
-        type = "disk";
-        device = "/dev/disk/by-id/scsi-0HC_Volume_105709934";
-        content = {
-          type = "gpt";
-          partitions = {
-            data = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/srv/hermes-data";
-              };
-            };
-          };
-        };
-      };
+
     };
   };
 }

@@ -2,11 +2,11 @@
   description = "Def4alt's Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-26.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
@@ -16,15 +16,12 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    hermes-agent.url = "github:NousResearch/hermes-agent";
-    hermes-agent.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
     self,
     nix-darwin,
     nixpkgs,
-    hermes-agent,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -68,7 +65,6 @@
         {
           nixpkgs.overlays = overlays;
         }
-        hermes-agent.nixosModules.default
         ./nixos/zorya
       ];
     };

@@ -38,6 +38,8 @@ in {
       pay-respects
       age
       sops
+      sshpass
+      devenv
     ] ++ lib.optionals isLinux [
       docker
     ];
@@ -53,16 +55,22 @@ in {
     };
   };
 
-  # ── macOS-only pi coding agent activation ───
-  home.activation.installPiCodingAgent =
-    lib.mkIf isDarwin
-    (lib.hm.dag.entryAfter ["writeBoundary"] ''
+  # ── npm global tools: pi coding agent & opencode ───
+  home.activation.installNpmGlobalTools =
+    lib.hm.dag.entryAfter ["writeBoundary"] ''
       export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
       mkdir -p "$HOME/.npm-global"
+
+      # pi coding agent
       if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
-        npm install --location=global --prefix "$HOME/.npm-global" @mariozechner/pi-coding-agent
+        npm install --location=global --prefix "$HOME/.npm-global" @earendil-works/pi-coding-agent
       fi
-    '');
+
+      # opencode
+      if [ ! -x "$HOME/.npm-global/bin/opencode" ]; then
+        npm install --location=global --prefix "$HOME/.npm-global" opencode-ai
+      fi
+    '';
 
   # ── Shell alias: platform-aware rebuild ───
   home.shellAliases.update =
@@ -88,6 +96,7 @@ in {
       fi
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
+      export PATH="$HOME/.cargo/bin:$PATH"
     '';
   };
 
@@ -154,6 +163,7 @@ in {
     ./modules/zoxide.nix
     ./modules/direnv.nix
     ./modules/tmux.nix
+    ./modules/helix.nix
   ] ++ lib.optionals isDarwin [
     ./modules/ghostty.nix
   ];
