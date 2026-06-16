@@ -53,6 +53,7 @@ in {
       VISUAL = "nvim";
       NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+      KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
     };
   };
 
@@ -92,6 +93,7 @@ in {
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
       export PATH="$HOME/.cargo/bin:$PATH"
+      export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
     '';
   };
 
