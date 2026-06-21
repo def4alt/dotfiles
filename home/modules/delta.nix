@@ -8,6 +8,8 @@
       features = "unobtrusive-line-numbers decorations";
       syntax-theme = "base16";
       whitespace-error-style = "22 reverse";
+      navigate = true;
+      dark = true;
 
       decorations = {
         commit-decoration-style = "bold yellow box ul";

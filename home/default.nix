@@ -140,6 +140,7 @@ in
       grep.lineNumber = true;
       help.autocorrect = 1;
       pull.rebase = true;
+      merge.conflictStyle = "zdiff3";
     };
     ignores = [
       "[._]*.s[a-v][a-z]"
