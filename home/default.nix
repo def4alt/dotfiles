@@ -92,7 +92,7 @@ in {
       fi
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
-      export PATH="$HOME/.cargo/bin:$PATH"
+      export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
       export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
     '';
   };

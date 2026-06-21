@@ -18,6 +18,7 @@
       set -sg escape-time 0
 
       set -g set-clipboard on
+      set -g focus-events on
 
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -v -c "#{pane_current_path}"

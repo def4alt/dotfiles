@@ -1,0 +1,18 @@
+-- YAML LSP: yaml-language-server
+
+vim.lsp.config("yamlls", {
+  cmd = { "yaml-language-server", "--stdio" },
+  filetypes = { "yaml" },
+  root_markers = { ".yamllint", ".git" },
+  settings = {
+    yaml = {
+      schemas = {
+        ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+        ["https://json.schemastore.org/kustomization.json"] = "kustomization.yaml",
+        ["https://raw.githubusercontent.com/helm-community/helm-json-schema/main/values.schema.json"] = "values.yaml",
+      },
+    },
+  },
+})
+
+vim.lsp.enable("yamlls")

@@ -22,43 +22,50 @@
       nil
       nixfmt
       statix
+
+      # LSP servers (configured via native vim.lsp.config)
+      gopls
+      rust-analyzer
+      pyright
+      typescript-language-server
+      yaml-language-server
+      bash-language-server
     ];
 
-    # All plugins are managed by lazy.nvim itself.
-    # It bootstraps itself on first run.
     plugins = [];
 
-    # Bootstrap lazy.nvim and load the lazy config.
-    # See lua/config/lazy.lua for the full lazy setup.
     initLua = ''
-      local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-      if not vim.uv.fs_stat(lazypath) then
-        vim.fn.system({
-          "git",
-          "clone",
-          "--filter=blob:none",
-          "https://github.com/folke/lazy.nvim.git",
-          "--branch=stable",
-          lazypath,
-        })
-      end
-      vim.opt.rtp:prepend(lazypath)
+      vim.g.mapleader = " "
+      vim.g.maplocalleader = " "
 
-      require("config.lazy")
+      -- Install and load plugins via native vim.pack (Neovim 0.12+)
+      -- All plugins track their default branch (no version constraint)
+      -- Use :Packupdate to update, :Packdel to remove
+      vim.pack.add({
+        { src = "https://github.com/rebelot/kanagawa.nvim" },
+        { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+        { src = "https://github.com/saghen/blink.cmp" },
+        { src = "https://github.com/rafamadriz/friendly-snippets" },
+        { src = "https://github.com/nvim-lualine/lualine.nvim" },
+        { src = "https://github.com/vieitesss/miniharp.nvim" },
+        { src = "https://github.com/stevearc/oil.nvim" },
+        { src = "https://github.com/echasnovski/mini.ai" },
+        { src = "https://github.com/echasnovski/mini.surround" },
+        { src = "https://github.com/echasnovski/mini.pairs" },
+        { src = "https://github.com/echasnovski/mini.icons" },
+        { src = "https://github.com/echasnovski/mini.diff" },
+        { src = "https://github.com/echasnovski/mini.hipatterns" },
+        { src = "https://github.com/echasnovski/mini.pick" },
+        { src = "https://github.com/echasnovski/mini.clue" },
+      }, { load = true })
+
+      -- Everything in plugin/ is auto-loaded by Neovim
     '';
   };
 
-  # Normal LazyVim config here, like this: https://github.com/LazyVim/starter/tree/main/lua
-  # mkOutOfStoreSymlink is used instead of a regular source so the files
-  # aren't copied into the Nix store. This keeps them writable, allowing
-  # you to edit your Lua config and see changes immediately without rebuilding.
-  xdg.configFile."nvim/lazyvim.json" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim/lazyvim.json";
-    force = true;
-  };
-
-  xdg.configFile."nvim/lua" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim/lua";
+  # mkOutOfStoreSymlink so files remain writable — edit and see changes immediately without rebuilding.
+  xdg.configFile."nvim/plugin" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim/plugin";
     recursive = true;
     force = true;
   };

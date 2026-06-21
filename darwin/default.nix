@@ -62,6 +62,7 @@
       "jellyfin-media-player"
       "codex"
       "wireshark-app"
+      "epic-games"
     ];
     taps = [
       "anomalyco/tap"
