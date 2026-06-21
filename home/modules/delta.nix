@@ -6,7 +6,7 @@
 
     options = {
       features = "unobtrusive-line-numbers decorations";
-      syntax-theme = "Monokai Extended Bright";
+      syntax-theme = "base16";
       whitespace-error-style = "22 reverse";
 
       decorations = {
