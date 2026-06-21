@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   username,
   hostname,
   stateVersion,
@@ -11,39 +10,45 @@
 let
   isDarwin = lib.hasSuffix "darwin" platform;
   isLinux = lib.hasSuffix "linux" platform;
-in {
+in
+{
   home = {
     inherit stateVersion username;
     homeDirectory =
-      if isDarwin
-      then "/Users/${username}"
-      else if isLinux
-      then "/home/${username}"
-      else "/";
+      if isDarwin then
+        "/Users/${username}"
+      else if isLinux then
+        "/home/${username}"
+      else
+        "/";
 
-    packages = with pkgs; [
-      coreutils
-      ripgrep
-      wget
-      lua
-      luarocks
-      ncdu
-      fd
-      zoxide
-      qpdf
-      tmux
-      python3
-      nodejs
-      gh
-      pay-respects
-      age
-      sops
-      sshpass
-      devenv
-    ] ++ lib.optionals isLinux [
-      docker
-      opencode
-    ];
+    packages =
+      with pkgs;
+      [
+        coreutils
+        ripgrep
+        wget
+        lua
+        luarocks
+        ncdu
+        fd
+        zoxide
+        qpdf
+        tmux
+        lazygit
+        python3
+        nodejs
+        gh
+        pay-respects
+        age
+        sops
+        sshpass
+        devenv
+      ]
+      ++ lib.optionals isLinux [
+        docker
+        opencode
+      ];
 
     sessionPath = [ "$HOME/.npm-global/bin" ];
 
@@ -58,23 +63,23 @@ in {
   };
 
   # ── npm global tool: pi coding agent ───
-  home.activation.installPiCodingAgent =
-    lib.hm.dag.entryAfter ["writeBoundary"] ''
-      export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
-      mkdir -p "$HOME/.npm-global"
+  home.activation.installPiCodingAgent = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
+    mkdir -p "$HOME/.npm-global"
 
-      if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
-        npm install --location=global --prefix "$HOME/.npm-global" @earendil-works/pi-coding-agent
-      fi
-    '';
+    if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
+      npm install --location=global --prefix "$HOME/.npm-global" @earendil-works/pi-coding-agent
+    fi
+  '';
 
   # ── Shell alias: platform-aware rebuild ───
   home.shellAliases.update =
-    if isDarwin
-    then ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"''
-    else if isLinux
-    then ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#${hostname}"''
-    else "";
+    if isDarwin then
+      ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"''
+    else if isLinux then
+      ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#${hostname}"''
+    else
+      "";
 
   manual.manpages.enable = true;
   programs.man.enable = true;
@@ -128,7 +133,6 @@ in {
       };
       core = {
         editor = "nvim";
-        fsmonitor = true;
         untrackedcache = true;
       };
       fetch.prune = true;
@@ -161,7 +165,8 @@ in {
     ./modules/direnv.nix
     ./modules/tmux.nix
     ./modules/helix.nix
-  ] ++ lib.optionals isDarwin [
+  ]
+  ++ lib.optionals isDarwin [
     ./modules/ghostty.nix
   ];
 }

@@ -1,13 +1,13 @@
 {
   pkgs,
   inputs,
-  config,
   platform,
   hostname,
   username,
   lib,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
@@ -170,13 +170,12 @@
     trackpad.Clicking = true;
   };
 
-
   users.users.def4alt = {
     name = "${username}";
     home = "/Users/${username}";
   };
 
-  environment.shells = [pkgs.zsh];
+  environment.shells = [ pkgs.zsh ];
   environment.pathsToLink = [ "/share/zsh" ];
 
   # Set Git commit hash for darwin-version.

@@ -1,4 +1,9 @@
-{config, pkgs, lib, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}:
+{
   programs.neovim = {
     enable = true;
     withRuby = true;
@@ -8,7 +13,6 @@
     extraPackages = with pkgs; [
       # general dependencies
       git
-      lazygit
       ripgrep
       fzf
       fd
@@ -32,7 +36,7 @@
       bash-language-server
     ];
 
-    plugins = [];
+    plugins = [ ];
 
     initLua = ''
       vim.g.mapleader = " "
@@ -51,8 +55,8 @@
         { src = "https://github.com/echasnovski/mini.icons" },
         { src = "https://github.com/echasnovski/mini.diff" },
         { src = "https://github.com/echasnovski/mini.hipatterns" },
-        { src = "https://github.com/echasnovski/mini.pick" },
         { src = "https://github.com/echasnovski/mini.clue" },
+        { src = "https://github.com/ibhagwan/fzf-lua" },
       }, { load = true })
     '';
   };
