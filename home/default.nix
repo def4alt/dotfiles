@@ -36,7 +36,6 @@ in
         qpdf
         tmux
         lazygit
-      eza
         python3
         nodejs
         gh
@@ -100,10 +99,6 @@ in
       export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
       export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
       export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
-      alias ls="eza --icons -a"
-      alias ll="eza --icons -lag"
-      alias la="eza --icons -la"
-      alias lt="eza --icons -T"
     '';
   };
 
@@ -166,6 +161,7 @@ in
     ./modules/fzf.nix
     ./modules/delta.nix
     ./modules/ripgrep.nix
+    ./modules/eza.nix
     ./modules/zoxide.nix
     ./modules/direnv.nix
     ./modules/tmux.nix
