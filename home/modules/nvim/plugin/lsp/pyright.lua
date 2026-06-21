@@ -1,16 +1,7 @@
--- Python LSP: pyright
-
 vim.lsp.config("pyright", {
   cmd = { "pyright" },
   filetypes = { "python" },
-  root_markers = {
-    "pyproject.toml",
-    "setup.py",
-    "setup.cfg",
-    "requirements.txt",
-    "Pipfile",
-    ".git",
-  },
+  root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
   settings = {
     python = {
       analysis = {
@@ -22,5 +13,4 @@ vim.lsp.config("pyright", {
     },
   },
 })
-
 vim.lsp.enable("pyright")

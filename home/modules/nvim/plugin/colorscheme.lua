@@ -1,9 +1,2 @@
--- Colorscheme: kanagawa.nvim
-
-require("kanagawa").setup({
-  compile = true,
-  theme = "dragon",
-  transparent = false,
-})
-
+require("kanagawa").setup({ compile = true, theme = "dragon" })
 vim.cmd.colorscheme("kanagawa-dragon")

@@ -1,8 +1,5 @@
--- Autocommands
-
 local augroup = vim.api.nvim_create_augroup("UserAutocmds", { clear = true })
 
--- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup,
   pattern = "*",
@@ -11,7 +8,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Show LSP progress messages in message area
 vim.api.nvim_create_autocmd("LspProgress", {
   callback = function(ev)
     local value = ev.data.params.value
@@ -26,7 +22,17 @@ vim.api.nvim_create_autocmd("LspProgress", {
   end,
 })
 
--- Close help windows with q
+vim.api.nvim_create_autocmd("InsertEnter", {
+  callback = function()
+    vim.keymap.set("i", "<Tab>", function()
+      return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
+    end, { expr = true, desc = "Next completion" })
+    vim.keymap.set("i", "<S-Tab>", function()
+      return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
+    end, { expr = true, desc = "Prev completion" })
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
   pattern = "help",
@@ -35,7 +41,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Format on save (LSP)
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = augroup,
   pattern = "*",

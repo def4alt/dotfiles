@@ -1,5 +1,3 @@
--- Keymap hints: mini.clue
-
 require("mini.clue").setup({
   triggers = {
     { mode = "n", keys = "<Leader>" },
@@ -13,7 +11,5 @@ require("mini.clue").setup({
     require("mini.clue").gen_clues.z(),
     require("mini.clue").gen_clues.windows(),
   },
-  window = {
-    delay = 300,
-  },
+  window = { delay = 300 },
 })

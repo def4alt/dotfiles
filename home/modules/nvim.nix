@@ -38,15 +38,11 @@
       vim.g.mapleader = " "
       vim.g.maplocalleader = " "
 
-      -- Install and load plugins via native vim.pack (Neovim 0.12+)
-      -- All plugins track their default branch (no version constraint)
-      -- Use :Packupdate to update, :Packdel to remove
       vim.pack.add({
         { src = "https://github.com/rebelot/kanagawa.nvim" },
         { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-        { src = "https://github.com/saghen/blink.cmp" },
-        { src = "https://github.com/rafamadriz/friendly-snippets" },
         { src = "https://github.com/nvim-lualine/lualine.nvim" },
+        { src = "https://github.com/echasnovski/mini.completion" },
         { src = "https://github.com/vieitesss/miniharp.nvim" },
         { src = "https://github.com/stevearc/oil.nvim" },
         { src = "https://github.com/echasnovski/mini.ai" },
@@ -58,8 +54,6 @@
         { src = "https://github.com/echasnovski/mini.pick" },
         { src = "https://github.com/echasnovski/mini.clue" },
       }, { load = true })
-
-      -- Everything in plugin/ is auto-loaded by Neovim
     '';
   };
 
