@@ -147,11 +147,11 @@ in
       "[._]*.sw[a-p]"
       "[._]s[a-v][a-z]"
       "[._]sw[a-p]"
-      ".aider*"
       ".DS_Store"
       "**/.DS_Store"
       ".env*"
       "**/.env*"
+      ".direnv"
     ];
   };
 
