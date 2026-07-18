@@ -17,39 +17,17 @@
 
       lua-language-server
       stylua
-      lua
-      luarocks
 
-      nil
+      nixd
       nixfmt
 
       bash-language-server
-      marksman
       shellcheck
       shfmt
-      vscode-langservers-extracted
+
+      marksman
       yaml-language-server
       yamlfmt
-
-      pyright
-      ruff
-
-      go
-      gofumpt
-      gopls
-
-      cargo
-      rustc
-      clippy
-      rustfmt
-      rust-analyzer
-
-      zig
-      zls
-
-      oxlint
-      oxfmt
-      vtsls
     ];
   };
 

@@ -10,7 +10,7 @@
       "window-padding-x" = 10;
       "window-padding-y" = 4;
       keybind = [ "shift+enter=text:\\x1b\\r" ];
-      command = "zsh -lic \"tmux new-session -A -s main\"";
+      command = "bash -lic \"tmux new-session -A -s main\"";
       "macos-titlebar-style" = "native";
       clipboard-read = "allow";
       copy-on-select = "clipboard";

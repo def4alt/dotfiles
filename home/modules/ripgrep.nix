@@ -2,7 +2,7 @@
   programs.ripgrep = {
     enable = true;
     arguments = [
-      "--color=always"
+      "--color=auto"
       "--column"
       "--hidden"
       "--line-number"

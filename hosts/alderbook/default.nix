@@ -36,33 +36,23 @@
     enable = true;
     enableBashIntegration = false;
     enableZshIntegration = false;
-    brews = [ "anomalyco/tap/opencode" ];
     casks = [
-      "orbstack"
-      "1password"
-      "obsidian"
-      "rectangle"
-      "signal"
-      "zoom"
-      "telegram"
-      "calibre"
       "ghostty"
-      "whatsapp"
       "anki"
+      "calibre"
       "topnotch"
-      "tailscale-app"
-      "zed"
       "minecraft"
       "zulu@8"
       "netnewswire"
-      "prismlauncher"
-      "jellyfin-media-player"
-      "codex"
       "epic-games"
-      "iina"
+      "jellyfin-media-player"
       "helium-browser"
+      "tailscale"
+      "1password"
+      "whatsapp"
+      "telegram"
+      "orbstack"
     ];
-    taps = [ "anomalyco/tap" ];
     onActivation = {
       cleanup = "zap";
       autoUpdate = false;

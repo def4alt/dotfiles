@@ -80,7 +80,7 @@ vim.lsp.enable({
   "jsonls",
   "lua_ls",
   "marksman",
-  "nil_ls",
+  "nixd",
   "oxlint",
   "pyright",
   "ruff",

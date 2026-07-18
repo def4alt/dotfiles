@@ -24,6 +24,8 @@
       overlays = [
         (_final: previous: {
           inherit (inputs.nixpkgs-unstable.legacyPackages.${previous.stdenv.hostPlatform.system})
+            opencode
+            codex
             pi-coding-agent
             ;
         })

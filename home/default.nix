@@ -22,29 +22,31 @@ in
         "/";
 
     packages = with pkgs; [
-      coreutils
-      ncdu
-      fd
-      qpdf
-      lazygit
-      python3
-      nodejs-slim
-      pnpm
+      opencode
       pi-coding-agent
+      codex
+      nodejs-slim
+
+      jq
       gh
       age
       sops
-      sshpass
-      devenv
-      yt-dlp
-      qemu
-      ffmpeg
       cheat
+      pnpm
+      python3
+
+      # GUI
+      obsidian
+      rectangle
+      signal-desktop
+      zoom-us
+      zed-editor
+      iina
+      prismlauncher
     ];
 
     sessionPath = [
       "$HOME/.local/bin"
-      "$HOME/.cargo/bin"
     ]
     ++ lib.optionals isDarwin [
       "/opt/homebrew/bin"
