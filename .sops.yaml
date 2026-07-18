@@ -1,6 +1,6 @@
 keys:
-  - &yourkey age1h5hqy6aupk6j5v522nv3jhtuq0cwp086jdc25fmujn8r9spd0e4szx559u
+  - &alderbook age1v06e3fzx5mqz3k8y6c0uneyfghzj7qkphxu2vfgm9ajwlwd605usdr69zr
 creation_rules:
-  - path_regex: secrets\.yaml$
+  - path_regex: ^secrets/personal\.yaml$
     key_groups:
-      - age: [*yourkey]
+      - age: [*alderbook]

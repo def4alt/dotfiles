@@ -12,6 +12,7 @@ Declarative configuration for `alderbook`, an Apple silicon Mac managed with nix
 ├── hosts/
 │   └── alderbook/        # Host-specific nix-darwin configuration
 ├── lib/                  # Flake construction helpers
+├── secrets/              # SOPS-encrypted secret documents
 ├── flake.nix             # Inputs and host outputs
 └── flake.lock            # Pinned dependencies
 ```
@@ -42,13 +43,28 @@ The `update` shell alias runs the corresponding rebuild command after bootstrap.
 
 ## Secrets
 
-Secrets are encrypted with [SOPS](https://getsops.io/) and age. Place the matching age identity at:
+Secrets under `secrets/` are encrypted with [SOPS](https://getsops.io/) and age and may be committed safely. Each device should use a separate age identity at:
 
 ```text
 ~/.config/sops/age/keys.txt
 ```
 
-Never format `secrets.yaml` files manually: changing encrypted payloads without SOPS invalidates their MAC. The pre-commit configuration excludes them from YAML formatters.
+Create an identity and print its public recipient with:
+
+```sh
+mkdir -p ~/.config/sops/age
+age-keygen -o ~/.config/sops/age/keys.txt
+chmod 600 ~/.config/sops/age/keys.txt
+age-keygen -y ~/.config/sops/age/keys.txt
+```
+
+Only share the resulting `age1…` recipient; never share or commit an `AGE-SECRET-KEY-…` identity. Add a device or recovery recipient to `.sops.yaml`, then rewrap the encrypted file from an already-authorized device:
+
+```sh
+sops updatekeys secrets/personal.yaml
+```
+
+Store a recovery identity in a password manager or offline, rather than installing it on every device. Edit encrypted files only through SOPS (`sops secrets/personal.yaml`); ordinary formatters can invalidate their MAC, so pre-commit excludes `secrets/*.yaml` from YAML formatting.
 
 ## Maintenance
 

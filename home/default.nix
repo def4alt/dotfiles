@@ -64,7 +64,6 @@ in
       VISUAL = "nvim";
       PNPM_HOME = "$HOME/.local/share/pnpm";
       PNPM_CONFIG_GLOBAL_DIR = "$HOME/.local/share/pnpm/global";
-      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
     }
     // lib.optionalAttrs isLinux {
       KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
@@ -97,7 +96,6 @@ in
           source "$HOME/.p10k.zsh"
         fi
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-        export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
       '';
     };
   };

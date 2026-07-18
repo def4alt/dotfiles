@@ -13,12 +13,12 @@ repos:
     rev: v0.21.0
     hooks:
       - id: yamlfmt
-        exclude: (^|/)secrets\.yaml$
+        exclude: ^secrets/.*\.yaml$
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.38.0
     hooks:
       - id: yamllint
-        exclude: (^|/)secrets\.yaml$
+        exclude: ^secrets/.*\.yaml$
   - repo: local
     hooks:
       - id: nixfmt
