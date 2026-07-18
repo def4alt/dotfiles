@@ -36,6 +36,7 @@ vim.pack.add({
   "https://github.com/saghen/blink.cmp",
   "https://github.com/nvim-mini/mini.diff",
   "https://github.com/nvim-mini/mini-git",
+  "https://github.com/nvim-mini/mini.hipatterns",
   "https://github.com/nvim-mini/mini.icons",
   "https://github.com/nvim-mini/mini.notify",
   "https://github.com/nvim-mini/mini.pairs",
