@@ -14,63 +14,34 @@
     };
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {
-    self,
-    nix-darwin,
-    nixpkgs,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    stateVersion = "24.11";
-    helper = import ./lib {inherit inputs outputs stateVersion;};
-    overlays = [
-      (final: prev: {
-        neovim-unwrapped = inputs.nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.neovim-unwrapped;
-      })
-    ];
-    inherit (helper.forAllSystems (system: nixpkgs.legacyPackages.${system}.stdenv)) isLinux;
-  in {
-    homeConfigurations =
-      if isLinux
-      then {
-        "def4alt@alderbook" = helper.mkHome {
-          hostname = "alderbook";
-          platform = "aarch64-darwin";
-          inherit overlays;
-        };
-      }
-      else {};
-
-    darwinConfigurations = {
-      alderbook = helper.mkDarwin {
+  outputs =
+    inputs@{ nixpkgs, ... }:
+    let
+      stateVersion = "24.11";
+      helpers = import ./lib { inherit inputs stateVersion; };
+      overlays = [
+        (_final: previous: {
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${previous.stdenv.hostPlatform.system})
+            pi-coding-agent
+            ;
+        })
+      ];
+    in
+    {
+      homeConfigurations."def4alt@alderbook" = helpers.mkHome {
         hostname = "alderbook";
         platform = "aarch64-darwin";
         inherit overlays;
       };
-    };
 
-    nixosConfigurations.zorya = inputs.nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit inputs outputs;
-        hostname = "zorya";
-        username = "def4alt";
-        stateVersion = "24.11";
+      darwinConfigurations.alderbook = helpers.mkDarwin {
+        hostname = "alderbook";
+        platform = "aarch64-darwin";
+        inherit overlays;
       };
-      modules = [
-        {
-          nixpkgs.overlays = overlays;
-        }
-        ./nixos/zorya
-      ];
-    };
 
-    formatter =
-      helper.forAllSystems (system:
-        nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
-  };
+      formatter = helpers.forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+    };
 }
