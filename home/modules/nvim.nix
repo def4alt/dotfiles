@@ -17,6 +17,8 @@
 
       lua-language-server
       stylua
+      lua
+      luarocks
 
       nil
       nixfmt
