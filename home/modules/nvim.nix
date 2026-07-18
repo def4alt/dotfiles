@@ -8,12 +8,11 @@
     enable = true;
     withRuby = false;
     withPython3 = false;
+    sideloadInitLua = true;
 
     extraPackages = with pkgs; [
       git
       ripgrep
-      fzf
-      fd
       tree-sitter
 
       lua-language-server
@@ -21,19 +20,21 @@
 
       nil
       nixfmt
-      statix
 
       bash-language-server
       marksman
+      shellcheck
+      shfmt
       vscode-langservers-extracted
       yaml-language-server
+      yamlfmt
 
       pyright
       ruff
 
       go
+      gofumpt
       gopls
-      golangci-lint
 
       cargo
       rustc
@@ -41,36 +42,18 @@
       rustfmt
       rust-analyzer
 
+      zig
+      zls
+
       oxlint
       oxfmt
       vtsls
     ];
-
-    initLua = ''
-      vim.g.mapleader = " "
-      vim.g.maplocalleader = " "
-
-      vim.pack.add({
-        { src = "https://github.com/rebelot/kanagawa.nvim" },
-        { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-        { src = "https://github.com/vieitesss/miniharp.nvim" },
-        { src = "https://github.com/stevearc/oil.nvim" },
-        { src = "https://github.com/echasnovski/mini.ai" },
-        { src = "https://github.com/echasnovski/mini.surround" },
-        { src = "https://github.com/echasnovski/mini.pairs" },
-        { src = "https://github.com/echasnovski/mini.icons" },
-        { src = "https://github.com/echasnovski/mini.diff" },
-        { src = "https://github.com/echasnovski/mini.hipatterns" },
-        { src = "https://github.com/echasnovski/mini.clue" },
-        { src = "https://github.com/ibhagwan/fzf-lua" },
-      }, { load = true })
-    '';
   };
 
-  # Keep plugin files writable so changes do not require a Home Manager rebuild.
-  xdg.configFile."nvim/plugin" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim/plugin";
-    recursive = true;
+  # Keep the config writable so plugin updates can update nvim-pack-lock.json.
+  xdg.configFile."nvim" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim";
     force = true;
   };
 }

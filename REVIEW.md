@@ -5,7 +5,7 @@
 - `flake.lock` pins all Nix inputs; update it intentionally with `nix flake update`.
 - CLI tools and language servers come from Nixpkgs rather than mutable global installers.
 - GUI applications unavailable or unsuitable in Nixpkgs are managed by Homebrew casks on macOS.
-- Neovim plugins use native `vim.pack` Git sources and are not pinned by this repository. This favors simple updates over fully reproducible editor plugins.
+- Neovim plugins use native `vim.pack` Git sources pinned by `home/modules/nvim/nvim-pack-lock.json`.
 
 ## Security notes
 

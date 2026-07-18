@@ -58,7 +58,9 @@ nix fmt                               # format Nix files
 nix flake check --all-systems          # evaluate every host/output
 nix run nixpkgs#deadnix -- --fail .    # find unused Nix declarations
 nix run nixpkgs#statix -- check .      # lint Nix expressions
-nix run nixpkgs#stylua -- --check home/modules/nvim/plugin
+nix run nixpkgs#stylua -- --check home/modules/nvim
 ```
+
+Inside Neovim, run `:lua vim.pack.update()` and confirm with `:write` to update the pinned plugin revisions.
 
 Install and run the optional Git hooks with `pre-commit install` and `pre-commit run --all-files`.
