@@ -30,17 +30,11 @@
       ];
     in
     {
-      homeConfigurations."def4alt@alderbook" = helpers.mkHome {
-        hostname = "alderbook";
-        platform = "aarch64-darwin";
-        inherit overlays;
-      };
-
       darwinConfigurations.alderbook = helpers.mkDarwin {
         hostname = "alderbook";
         inherit overlays;
       };
 
-      formatter = helpers.forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
     };
 }

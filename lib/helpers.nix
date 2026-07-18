@@ -51,34 +51,4 @@
       ];
     };
 
-  mkHome =
-    {
-      hostname,
-      username ? "def4alt",
-      platform ? "x86_64-linux",
-      overlays ? [ ],
-    }:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = import inputs.nixpkgs {
-        system = platform;
-        inherit overlays;
-        config.allowUnfree = true;
-      };
-      extraSpecialArgs = {
-        inherit
-          hostname
-          inputs
-          platform
-          stateVersion
-          username
-          ;
-      };
-      modules = [ ../home ];
-    };
-
-  forAllSystems = inputs.nixpkgs.lib.genAttrs [
-    "aarch64-linux"
-    "aarch64-darwin"
-    "x86_64-linux"
-  ];
 }
