@@ -1,4 +1,4 @@
-_: {
+{
   programs.ghostty = {
     enable = true;
     package = null;
@@ -13,7 +13,6 @@ _: {
       command = "zsh -lic \"tmux new-session -A -s main\"";
       "macos-titlebar-style" = "native";
       clipboard-read = "allow";
-      clipboard-write = "allow";
       copy-on-select = "clipboard";
     };
   };

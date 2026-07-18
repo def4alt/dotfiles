@@ -46,8 +46,6 @@
       vtsls
     ];
 
-    plugins = [ ];
-
     initLua = ''
       vim.g.mapleader = " "
       vim.g.maplocalleader = " "

@@ -54,6 +54,7 @@ in
 
     sessionPath = [
       "$HOME/.local/bin"
+      "$HOME/.cargo/bin"
       "$HOME/.local/share/pnpm"
     ];
 
@@ -82,11 +83,9 @@ in
         "";
   };
 
-  manual.manpages.enable = true;
   fonts.fontconfig.enable = true;
 
   programs = {
-    man.enable = true;
     home-manager.enable = true;
 
     zsh = {
@@ -99,7 +98,6 @@ in
         fi
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
         export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
-        export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
       '';
     };
   };
@@ -131,10 +129,7 @@ in
         format = "ssh";
         ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       };
-      core = {
-        editor = "nvim";
-        untrackedcache = true;
-      };
+      core.untrackedcache = true;
       fetch.prune = true;
       grep.lineNumber = true;
       help.autocorrect = 1;

@@ -38,7 +38,6 @@
 
       darwinConfigurations.alderbook = helpers.mkDarwin {
         hostname = "alderbook";
-        platform = "aarch64-darwin";
         inherit overlays;
       };
 

@@ -27,9 +27,7 @@
         {
           nix-homebrew = {
             enable = true;
-            enableRosetta = false;
             user = username;
-            mutableTaps = true;
             autoMigrate = true;
           };
         }

@@ -14,18 +14,12 @@
   };
 
   nix = {
-    package = pkgs.nix;
     gc.automatic = true;
     optimise.automatic = true;
     settings.experimental-features = "nix-command flakes";
   };
 
   networking.hostName = hostname;
-
-  documentation = {
-    enable = true;
-    man.enable = true;
-  };
 
   environment = {
     variables = {
@@ -147,8 +141,6 @@
         "61".enabled = false;
         # Disable Command-Space Spotlight search.
         "64".enabled = false;
-        # Keep the Command-Option-Space Finder search window enabled.
-        "65".enabled = true;
       };
       menuExtraClock = {
         Show24Hour = true;
@@ -170,8 +162,5 @@
     stateVersion = 5;
   };
 
-  users.users.${username} = {
-    name = username;
-    home = "/Users/${username}";
-  };
+  users.users.${username}.home = "/Users/${username}";
 }
