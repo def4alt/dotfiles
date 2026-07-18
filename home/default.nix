@@ -39,6 +39,7 @@ in
       yt-dlp
       qemu
       ffmpeg
+      cheat
     ];
 
     sessionPath = [
