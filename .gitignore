@@ -5,6 +5,3 @@
 .direnv/
 result
 result-*
-
-# Local scratch files
-/tmp/
