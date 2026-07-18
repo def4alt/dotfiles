@@ -2,7 +2,6 @@
   lib,
   pkgs,
   username,
-  hostname,
   stateVersion,
   platform,
   ...
@@ -22,40 +21,29 @@ in
       else
         "/";
 
-    packages =
-      with pkgs;
-      [
-        coreutils
-        wget
-        lua
-        luarocks
-        ncdu
-        fd
-        qpdf
-        lazygit
-        python3
-        nodejs-slim
-        pnpm
-        pi-coding-agent
-        gh
-        pay-respects
-        age
-        sops
-        sshpass
-        devenv
-        yt-dlp
-        qemu
-        ffmpeg
-      ]
-      ++ lib.optionals isLinux [
-        docker
-        opencode
-      ];
+    packages = with pkgs; [
+      coreutils
+      ncdu
+      fd
+      qpdf
+      lazygit
+      python3
+      nodejs-slim
+      pnpm
+      pi-coding-agent
+      gh
+      age
+      sops
+      sshpass
+      devenv
+      yt-dlp
+      qemu
+      ffmpeg
+    ];
 
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.cargo/bin"
-      "$HOME/.local/share/pnpm"
     ];
 
     sessionVariables = {
@@ -64,22 +52,13 @@ in
       VISUAL = "nvim";
       PNPM_HOME = "$HOME/.local/share/pnpm";
       PNPM_CONFIG_GLOBAL_DIR = "$HOME/.local/share/pnpm/global";
-    }
-    // lib.optionalAttrs isLinux {
-      KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
     };
   };
 
   home.shellAliases = {
     ll = "ls -lah";
     cat = "bat";
-    update =
-      if isDarwin then
-        ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"''
-      else if isLinux then
-        ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#${hostname}"''
-      else
-        "";
+    update = if isDarwin then ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"'' else "";
   };
 
   fonts.fontconfig.enable = true;
@@ -157,10 +136,7 @@ in
     ./modules/zoxide.nix
     ./modules/direnv.nix
     ./modules/tmux.nix
-    ./modules/helix.nix
     ./modules/ssh.nix
-  ]
-  ++ lib.optionals isDarwin [
     ./modules/ghostty.nix
   ];
 }
