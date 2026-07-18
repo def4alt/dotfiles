@@ -26,81 +26,82 @@ in
       with pkgs;
       [
         coreutils
-        ripgrep
         wget
         lua
         luarocks
         ncdu
         fd
-        zoxide
         qpdf
-        tmux
         lazygit
         python3
-        nodejs
+        nodejs-slim
+        pnpm
+        pi-coding-agent
         gh
         pay-respects
         age
         sops
         sshpass
         devenv
+        yt-dlp
+        qemu
+        ffmpeg
       ]
       ++ lib.optionals isLinux [
         docker
         opencode
       ];
 
-    sessionPath = [ "$HOME/.npm-global/bin" ];
+    sessionPath = [
+      "$HOME/.local/bin"
+      "$HOME/.local/share/pnpm"
+    ];
 
     sessionVariables = {
       EDITOR = "nvim";
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
-      NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+      PNPM_HOME = "$HOME/.local/share/pnpm";
+      PNPM_CONFIG_GLOBAL_DIR = "$HOME/.local/share/pnpm/global";
       SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+    }
+    // lib.optionalAttrs isLinux {
       KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
     };
   };
 
-  # ── npm global tool: pi coding agent ───
-  home.activation.installPiCodingAgent = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export PATH="$HOME/.npm-global/bin:${pkgs.nodejs}/bin:$PATH"
-    mkdir -p "$HOME/.npm-global"
-
-    if [ ! -x "$HOME/.npm-global/bin/pi" ]; then
-      npm install --location=global --prefix "$HOME/.npm-global" @earendil-works/pi-coding-agent
-    fi
-  '';
-
-  # ── Shell alias: platform-aware rebuild ───
-  home.shellAliases.update =
-    if isDarwin then
-      ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"''
-    else if isLinux then
-      ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#${hostname}"''
-    else
-      "";
+  home.shellAliases = {
+    ll = "ls -lah";
+    cat = "bat";
+    update =
+      if isDarwin then
+        ''sudo darwin-rebuild switch --flake "$HOME/dotfiles#alderbook"''
+      else if isLinux then
+        ''sudo nixos-rebuild switch --flake "$HOME/dotfiles#${hostname}"''
+      else
+        "";
+  };
 
   manual.manpages.enable = true;
-  programs.man.enable = true;
-  programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
 
-  # ── ZSH ──────────────────────────────────────────
-  programs.zsh = {
-    enable = true;
-    enableCompletion = false;
+  programs = {
+    man.enable = true;
+    home-manager.enable = true;
 
-    initContent = ''
-      if [ -f "$HOME/.p10k.zsh" ]; then
-        source "$HOME/.p10k.zsh"
-      fi
-      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-      export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
-      export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
-      export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
-      alias cat="bat"
-    '';
+    zsh = {
+      enable = true;
+      enableCompletion = false;
+
+      initContent = ''
+        if [ -f "$HOME/.p10k.zsh" ]; then
+          source "$HOME/.p10k.zsh"
+        fi
+        source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+        export OPENCODE_API_KEY="$(cat "$HOME/.local/share/sops/age/secrets/opencode-api-key" 2>/dev/null || true)"
+        export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+      '';
+    };
   };
 
   home.file.".p10k.zsh" = {
@@ -113,13 +114,11 @@ in
     '';
   };
 
-  # ── Git ──────────────────────────────────────────
   programs.git = {
     enable = true;
     signing = lib.mkIf isDarwin {
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH";
       signByDefault = true;
-      format = "openpgp";
     };
     settings = {
       user = {
@@ -155,7 +154,6 @@ in
     ];
   };
 
-  # ── Imports ──────────────────────────────────────
   imports = [
     ./modules/sops.nix
     ./modules/bat.nix
@@ -163,11 +161,11 @@ in
     ./modules/fzf.nix
     ./modules/delta.nix
     ./modules/ripgrep.nix
-    ./modules/eza.nix
     ./modules/zoxide.nix
     ./modules/direnv.nix
     ./modules/tmux.nix
     ./modules/helix.nix
+    ./modules/ssh.nix
   ]
   ++ lib.optionals isDarwin [
     ./modules/ghostty.nix
