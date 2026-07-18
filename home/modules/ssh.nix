@@ -15,12 +15,6 @@ in
         IdentityAgent = ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
       };
 
-      testbed = {
-        Hostname = "testbed.grnvs.net.cit.tum.de";
-        User = "u76319";
-        Port = 10022;
-      };
-
       halle = {
         Hostname = "lxhalle.in.tum.de";
         User = "olkh";

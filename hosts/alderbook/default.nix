@@ -55,7 +55,6 @@
       "prismlauncher"
       "jellyfin-media-player"
       "codex"
-      "wireshark-app"
       "epic-games"
       "iina"
       "helium-browser"
