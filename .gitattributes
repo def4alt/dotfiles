@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+*.lock linguist-generated=true
+**/hardware-configuration.nix linguist-generated=true
+config/rectangle/RectangleConfig.json linguist-generated=true

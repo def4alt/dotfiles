@@ -1,3 +1,10 @@
-# Alejandra pre-commit binary
-result-alejandra
-tmp
+# Operating-system metadata
+.DS_Store
+
+# Nix development artifacts
+.direnv/
+result
+result-*
+
+# Local scratch files
+/tmp/
