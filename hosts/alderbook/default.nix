@@ -1,6 +1,5 @@
 {
   hostname,
-  inputs,
   lib,
   pkgs,
   platform,
@@ -62,8 +61,8 @@
     taps = [ "anomalyco/tap" ];
     onActivation = {
       cleanup = "zap";
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
     };
   };
 
@@ -153,9 +152,6 @@
         Clicking = true;
       };
     };
-
-    # Record the source revision in `darwin-version` when available.
-    configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
     # Used for backwards compatibility; consult `darwin-rebuild changelog` before changing.
     stateVersion = 5;
