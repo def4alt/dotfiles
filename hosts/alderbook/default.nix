@@ -26,12 +26,16 @@
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
     };
-    shells = [ pkgs.zsh ];
-    pathsToLink = [ "/share/zsh" ];
+    shells = [ pkgs.bashInteractive ];
+    pathsToLink = [ "/share/bash-completion" ];
   };
+
+  programs.bash.completion.enable = true;
 
   homebrew = {
     enable = true;
+    enableBashIntegration = false;
+    enableZshIntegration = false;
     brews = [ "anomalyco/tap/opencode" ];
     casks = [
       "orbstack"
@@ -157,5 +161,8 @@
     stateVersion = 5;
   };
 
-  users.users.${username}.home = "/Users/${username}";
+  users.users.${username} = {
+    home = "/Users/${username}";
+    shell = pkgs.bashInteractive;
+  };
 }

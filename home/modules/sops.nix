@@ -23,7 +23,7 @@
     OPENROUTER_API_KEY_FILE = config.sops.secrets.openrouter-api-key.path;
   };
 
-  programs.zsh.initContent = lib.mkAfter ''
+  programs.bash.initExtra = lib.mkAfter ''
     opencode() {
       if [[ -r "$OPENCODE_API_KEY_FILE" ]]; then
         OPENCODE_API_KEY="$(<"$OPENCODE_API_KEY_FILE")" command opencode "$@"
@@ -32,12 +32,16 @@
       fi
     }
 
-    pi() {
-      if [[ -r "$OPENROUTER_API_KEY_FILE" ]]; then
-        OPENROUTER_API_KEY="$(<"$OPENROUTER_API_KEY_FILE")" command pi "$@"
-      else
-        command pi "$@"
+    pi() (
+      if [[ -r "$OPENCODE_API_KEY_FILE" ]]; then
+        export OPENCODE_API_KEY="$(<"$OPENCODE_API_KEY_FILE")"
       fi
-    }
+
+      if [[ -r "$OPENROUTER_API_KEY_FILE" ]]; then
+        export OPENROUTER_API_KEY="$(<"$OPENROUTER_API_KEY_FILE")"
+      fi
+
+      command pi "$@"
+    )
   '';
 }

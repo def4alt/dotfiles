@@ -44,10 +44,16 @@ in
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.cargo/bin"
+    ]
+    ++ lib.optionals isDarwin [
+      "/opt/homebrew/bin"
+      "/opt/homebrew/sbin"
     ];
 
     sessionVariables = {
       EDITOR = "nvim";
+      LANG = "en_US.UTF-8";
+      LC_COLLATE = "C";
       SYSTEMD_EDITOR = "nvim";
       VISUAL = "nvim";
       PNPM_HOME = "$HOME/.local/share/pnpm";
@@ -63,30 +69,11 @@ in
 
   fonts.fontconfig.enable = true;
 
-  programs = {
-    home-manager.enable = true;
+  programs.home-manager.enable = true;
 
-    zsh = {
-      enable = true;
-      enableCompletion = false;
-
-      initContent = ''
-        if [ -f "$HOME/.p10k.zsh" ]; then
-          source "$HOME/.p10k.zsh"
-        fi
-        source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-      '';
-    };
-  };
-
-  home.file.".p10k.zsh" = {
-    text = ''
-      source ${pkgs.zsh-powerlevel10k}/share/zsh/themes/powerlevel10k/config/p10k-lean.zsh
-      typeset -g POWERLEVEL9K_VCS_GIT_GITHUB_ICON=""
-      typeset -g POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION=""
-      typeset -g POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-      typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-    '';
+  home.file = {
+    ".bashrc".force = true;
+    ".profile".force = true;
   };
 
   programs.git = {
@@ -128,6 +115,7 @@ in
 
   imports = [
     ./modules/sops.nix
+    ./modules/bash.nix
     ./modules/bat.nix
     ./modules/nvim.nix
     ./modules/fzf.nix
