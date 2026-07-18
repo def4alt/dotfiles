@@ -20,12 +20,16 @@ vim.opt.completeopt = "menuone,noselect"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.undofile = true
+vim.opt.cmdheight = 0
+vim.opt.laststatus = 3
 
 vim.lsp.inlay_hint.enable(true)
 
 -- OSC 52 clipboard (SSH/tmux)
 local function write_osc52(text)
-  if not text or #text == 0 then return end
+  if not text or #text == 0 then
+    return
+  end
   local encoded = vim.base64.encode(text)
   local seq = string.format("\027]52;c;%s\007", encoded)
   if vim.fn.filewritable("/dev/fd/2") == 1 then
@@ -40,10 +44,18 @@ local function write_osc52(text)
 end
 vim.g.clipboard = {
   name = "OSC52",
-  copy = { ["+"] = function(lines, _)
-    if lines and #lines > 0 then write_osc52(table.concat(lines, "\n")) end
-  end },
-  paste = { ["+"] = function() return {} end },
+  copy = {
+    ["+"] = function(lines, _)
+      if lines and #lines > 0 then
+        write_osc52(table.concat(lines, "\n"))
+      end
+    end,
+  },
+  paste = {
+    ["+"] = function()
+      return {}
+    end,
+  },
 }
 
 -- ui2: LSP progress → ephemeral msg window
@@ -51,11 +63,7 @@ require("vim._core.ui2").enable({
   msg = { targets = { default = "cmd", progress = "msg" }, msg = { timeout = 4000 } },
 })
 
-local cwd = vim.fn.getcwd()
-local venv_py = cwd .. "/.venv/bin/python"
-if vim.fn.executable(venv_py) == 1 then
-  vim.g.python3_host_prog = venv_py
-end
-
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0

@@ -9,6 +9,12 @@ map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Prev buffer" })
 map({ "n", "x" }, "<leader>y", '"+y', { desc = "Copy clipboard" })
 map({ "n", "x" }, "<leader>p", '"+p', { desc = "Paste clipboard" })
+map("i", "<Tab>", function()
+  return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
+end, { expr = true, desc = "Next completion" })
+map("i", "<S-Tab>", function()
+  return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
+end, { expr = true, desc = "Prev completion" })
 
 -- LSP
 map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
@@ -22,7 +28,11 @@ map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" 
 map("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
 
 -- Diagnostics
-map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Prev diagnostic" })
-map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
+map("n", "[d", function()
+  vim.diagnostic.jump({ count = -1 })
+end, { desc = "Prev diagnostic" })
+map("n", "]d", function()
+  vim.diagnostic.jump({ count = 1 })
+end, { desc = "Next diagnostic" })
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Diagnostic float" })
 map("n", "<leader>cl", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })

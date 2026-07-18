@@ -6,34 +6,44 @@
 {
   programs.neovim = {
     enable = true;
-    withRuby = true;
-    withPython3 = true;
+    withRuby = false;
+    withPython3 = false;
 
-    # Tools and LSP servers available on $PATH for Neovim.
     extraPackages = with pkgs; [
-      # general dependencies
       git
       ripgrep
       fzf
       fd
       tree-sitter
 
-      # LUA
       lua-language-server
       stylua
 
-      # NIX
       nil
       nixfmt
       statix
 
-      # LSP servers (configured via native vim.lsp.config)
-      gopls
-      rust-analyzer
-      pyright
-      typescript-language-server
-      yaml-language-server
       bash-language-server
+      marksman
+      vscode-langservers-extracted
+      yaml-language-server
+
+      pyright
+      ruff
+
+      go
+      gopls
+      golangci-lint
+
+      cargo
+      rustc
+      clippy
+      rustfmt
+      rust-analyzer
+
+      oxlint
+      oxfmt
+      vtsls
     ];
 
     plugins = [ ];
@@ -45,8 +55,6 @@
       vim.pack.add({
         { src = "https://github.com/rebelot/kanagawa.nvim" },
         { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-        { src = "https://github.com/nvim-lualine/lualine.nvim" },
-        { src = "https://github.com/echasnovski/mini.completion" },
         { src = "https://github.com/vieitesss/miniharp.nvim" },
         { src = "https://github.com/stevearc/oil.nvim" },
         { src = "https://github.com/echasnovski/mini.ai" },
@@ -61,7 +69,7 @@
     '';
   };
 
-  # mkOutOfStoreSymlink so files remain writable — edit and see changes immediately without rebuilding.
+  # Keep plugin files writable so changes do not require a Home Manager rebuild.
   xdg.configFile."nvim/plugin" = {
     source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home/modules/nvim/plugin";
     recursive = true;

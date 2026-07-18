@@ -2,6 +2,13 @@ vim.lsp.config("yamlls", {
   cmd = { "yaml-language-server", "--stdio" },
   filetypes = { "yaml" },
   root_markers = { ".yamllint", ".git" },
+  capabilities = {
+    workspace = {
+      didChangeConfiguration = {
+        dynamicRegistration = true,
+      },
+    },
+  },
   settings = {
     yaml = {
       schemas = {

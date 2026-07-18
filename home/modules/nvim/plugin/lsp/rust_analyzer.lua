@@ -3,7 +3,11 @@ vim.lsp.config("rust_analyzer", {
   filetypes = { "rust" },
   root_markers = { "Cargo.toml", "Cargo.lock" },
   settings = {
-    ["rust-analyzer"] = { checkOnSave = true, procMacro = { enable = true } },
+    ["rust-analyzer"] = {
+      checkOnSave = true,
+      check = { command = "clippy" },
+      procMacro = { enable = true },
+    },
   },
 })
 vim.lsp.enable("rust_analyzer")

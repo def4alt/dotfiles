@@ -22,17 +22,6 @@ vim.api.nvim_create_autocmd("LspProgress", {
   end,
 })
 
-vim.api.nvim_create_autocmd("InsertEnter", {
-  callback = function()
-    vim.keymap.set("i", "<Tab>", function()
-      return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
-    end, { expr = true, desc = "Next completion" })
-    vim.keymap.set("i", "<S-Tab>", function()
-      return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
-    end, { expr = true, desc = "Prev completion" })
-  end,
-})
-
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
   pattern = "help",
@@ -44,7 +33,10 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = augroup,
   pattern = "*",
-  callback = function()
-    vim.lsp.buf.format({ async = false, timeout_ms = 1000 })
+  callback = function(args)
+    local clients = vim.lsp.get_clients({ bufnr = args.buf, method = "textDocument/formatting" })
+    if #clients > 0 then
+      vim.lsp.buf.format({ bufnr = args.buf, async = false, timeout_ms = 1000 })
+    end
   end,
 })
