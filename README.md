@@ -148,19 +148,28 @@ eval "$(op signin)"       # or: authenticate the current shell
 op plugin init            # enable the 1Password desktop app integration
 ```
 
-`config.toml` declares only the opaque references, never the values:
+The key lives in the `OpenCode` item in the `Private` vault, which is a 1Password
+**API Credential**, so the value is in its `credential` field. `config.toml`
+declares only the opaque reference, never the value:
 
 ```toml
 [env]
-OP_OPENCODE_API_KEY = "op://Private/API Keys/opencode-api-key"
-OP_OPENROUTER_API_KEY = "op://Private/API Keys/openrouter-api-key"
+OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
 ```
 
-Adjust those to match your vault and item names. `home/bashrc` wraps `opencode`
-and `pi` so each invocation resolves the key with `op read` and passes it to that
-one process only. Nothing sensitive is written to disk or exported into the
-environment of unrelated processes, and both wrappers degrade to running without
-the key when `op` is unavailable.
+Note that `op read` requires **vault, item and field**, so the shorter
+`op://Private/OpenCode` is rejected as "too few '/'".
+
+`home/bashrc` wraps `opencode` and `pi` so each invocation resolves the key with
+`op read` and passes it to that one process only. Nothing sensitive is written to
+disk or exported into the environment of unrelated processes, and both wrappers
+degrade to running without the key when `op` is unavailable.
+
+To check a reference resolves, without printing the secret:
+
+```sh
+op read "op://Private/OpenCode/credential" | wc -c
+```
 
 GitHub access is handled separately, by the `gh` CLI rather than 1Password,
 because `gh` already holds a token and mise can reuse it without a second

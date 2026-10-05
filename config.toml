@@ -15,10 +15,13 @@
 EDITOR = "nvim"
 LANG = "en_US.UTF-8"
 LC_COLLATE = "C"
-# 1Password references, not secret values. home/bashrc resolves them through
-# `op read` so tokens are never exported to unrelated processes.
-OP_OPENCODE_API_KEY = "op://Private/API Keys/opencode-api-key"
-OP_OPENROUTER_API_KEY = "op://Private/API Keys/openrouter-api-key"
+# 1Password reference, not the secret value. home/bashrc resolves it through
+# `op read` so the token is never exported to unrelated processes.
+#
+# The OpenCode item in the Private vault is an API Credential, so the value is in
+# its `credential` field. `op read` needs vault, item and field, so the two-field
+# form `op://Private/OpenCode` is not valid.
+OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
 SYSTEMD_EDITOR = "nvim"
 VISUAL = "nvim"
 

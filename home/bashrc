@@ -82,10 +82,5 @@ pi() (
     export OPENCODE_API_KEY="$key"
   fi
 
-  key="$(op_read "$OP_OPENROUTER_API_KEY")"
-  if [[ -n $key ]]; then
-    export OPENROUTER_API_KEY="$key"
-  fi
-
   command pi "$@"
 )
