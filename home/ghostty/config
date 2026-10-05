@@ -1,0 +1,13 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+
+clipboard-read = allow
+command = bash -lic "tmux new-session -A -s main"
+copy-on-select = clipboard
+font-family = JetBrains Mono
+font-size = 18
+keybind = shift+enter=text:\x1b\r
+macos-titlebar-style = native
+mouse-hide-while-typing = true
+theme = Kanagawa Dragon
+window-padding-x = 10
+window-padding-y = 4

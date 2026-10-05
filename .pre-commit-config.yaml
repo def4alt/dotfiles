@@ -13,17 +13,19 @@ repos:
     rev: v0.21.0
     hooks:
       - id: yamlfmt
-        exclude: ^secrets/.*\.yaml$
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.38.0
     hooks:
       - id: yamllint
-        exclude: ^secrets/.*\.yaml$
   - repo: local
     hooks:
-      - id: nixfmt
-        name: nixfmt
-        entry: nix fmt --
-        files: \.nix$
+      - id: taplo
+        name: taplo
+        entry: taplo format --
+        files: \.toml$
         language: system
-        pass_filenames: true
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck -s bash --
+        files: ^tasks/
+        language: system

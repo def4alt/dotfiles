@@ -1,7 +1,5 @@
 # Operating-system metadata
 .DS_Store
 
-# Nix development artifacts
+# Local environment
 .direnv/
-result
-result-*

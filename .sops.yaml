@@ -1,6 +1,0 @@
-keys:
-  - &alderbook age1v06e3fzx5mqz3k8y6c0uneyfghzj7qkphxu2vfgm9ajwlwd605usdr69zr
-creation_rules:
-  - path_regex: ^secrets/personal\.yaml$
-    key_groups:
-      - age: [*alderbook]

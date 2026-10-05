@@ -1,0 +1,12 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+#
+# PATH is set once in ~/.profile, which is sourced below, so that a login shell
+# does not prepend the same entries twice.
+
+if [[ -f ~/.profile ]]; then
+  . ~/.profile
+fi
+
+if [[ -f ~/.bashrc ]]; then
+  . ~/.bashrc
+fi

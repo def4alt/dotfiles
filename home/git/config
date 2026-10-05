@@ -1,0 +1,69 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+
+[user]
+	email = "andrii.olkhovych@tum.de"
+	name = "Andrii Olkhovych"
+	signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH"
+
+[commit]
+	gpgSign = true
+
+[tag]
+	gpgSign = true
+
+[gpg]
+	format = "ssh"
+
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[init]
+	defaultBranch = "main"
+
+[push]
+	autoSetupRemote = true
+
+[pull]
+	rebase = true
+
+[fetch]
+	prune = true
+
+[merge]
+	conflictStyle = "zdiff3"
+
+[grep]
+	lineNumber = true
+
+[help]
+	autocorrect = 1
+
+[core]
+	untrackedcache = true
+	pager = "delta"
+
+[interactive]
+	diffFilter = "delta --color-only"
+
+[delta]
+	dark = true
+	features = "unobtrusive-line-numbers decorations"
+	navigate = true
+	syntax-theme = "base16"
+	whitespace-error-style = "22 reverse"
+
+[delta "decorations"]
+	commit-decoration-style = "bold yellow box ul"
+	file-decoration-style = "none"
+	file-style = "bold yellow ul"
+	hunk-header-decoration-style = "yellow box"
+
+[delta "unobtrusive-line-numbers"]
+	line-numbers = true
+	line-numbers-left-format = "{nm:>4}┊"
+	line-numbers-left-style = "#444444"
+	line-numbers-minus-style = "#444444"
+	line-numbers-plus-style = "#444444"
+	line-numbers-right-format = "{np:>4}│"
+	line-numbers-right-style = "#444444"
+	line-numbers-zero-style = "#444444"

@@ -1,0 +1,10 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+#
+# Single owner of PATH for login sessions. ~/.bash_profile sources this file
+# rather than repeating it, so entries are not prepended twice.
+#
+# Order matters:
+#   /opt/homebrew/bin  tools installed by mise's Homebrew manager
+#   ~/.local/bin       the mise binary itself, plus pi/roc/opencode/uv
+#   mise shims         fallback for tools mise manages directly
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"

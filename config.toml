@@ -1,0 +1,262 @@
+# Declarative machine setup for alderbook (Apple silicon macOS).
+#
+# Adopt onto a new machine:
+#   mise bootstrap --adopt git@github.com:def4alt/dotfiles.git
+# Preview, apply and verify:
+#   mise bootstrap --dry-run
+#   mise bootstrap
+#   mise bootstrap status
+#
+# Shell startup files are managed as whole files under [dotfiles], so mise's
+# own [bootstrap.mise_shell_activate] would be skipped. `mise activate bash`
+# lives in home/bashrc instead.
+
+[env]
+EDITOR = "nvim"
+LANG = "en_US.UTF-8"
+LC_COLLATE = "C"
+# 1Password references, not secret values. home/bashrc resolves them through
+# `op read` so tokens are never exported to unrelated processes.
+OP_OPENCODE_API_KEY = "op://Private/API Keys/opencode-api-key"
+OP_OPENROUTER_API_KEY = "op://Private/API Keys/openrouter-api-key"
+SYSTEMD_EDITOR = "nvim"
+VISUAL = "nvim"
+
+# Evaluating third-party tap cask definitions (aerospace, tinycast,
+# 1password-cli) needs a Ruby 3+ runtime on PATH, which Homebrew cannot provide
+# until its prefix is writable. This is the only mise-managed tool.
+[tools]
+ruby = "3"
+
+# mise resolves third-party taps through the GitHub API. Without a token that
+# is a small unauthenticated budget, and exhausting it fails any command that
+# inspects packages. Ask the gh CLI for its token rather than reading its
+# hosts.yml, which also works when gh keeps the token in the macOS Keychain.
+# Use $MISE_CREDENTIAL_HOST, not $1: the positional form is deprecated.
+[settings.github]
+credential_command = 'gh auth token --hostname "$MISE_CREDENTIAL_HOST"'
+
+# Third-party taps. Required by the qualified cask names below.
+[bootstrap.brew.taps]
+"1password/tap" = "https://github.com/1password/homebrew-tap.git"
+"abue-ammar/tinycast/tap" = "https://github.com/abue-ammar/tinycast.git"
+"nikitabobko/tap" = "https://github.com/nikitabobko/homebrew-tap.git"
+
+# Host packages. mise pours Homebrew formulae into /opt/homebrew directly and
+# reads the existing Cellar, so formulae already installed by Homebrew count as
+# installed and are left untouched.
+[bootstrap.packages]
+"brew:bash" = "latest"
+"brew:bash-language-server" = "latest"
+"brew:bat" = "latest"
+"brew:direnv" = "latest"
+"brew:duti" = "latest"
+"brew:fd" = "latest"
+"brew:fzf" = "latest"
+"brew:gh" = "latest"
+"brew:git" = "latest"
+"brew:git-delta" = "latest"
+"brew:jq" = "latest"
+"brew:lua-language-server" = "latest"
+"brew:neovim" = "latest"
+"brew:node" = "latest"
+"brew:oh-my-posh" = "latest"
+"brew:python@3.13" = "latest"
+"brew:ripgrep" = "latest"
+"brew:shellcheck" = "latest"
+"brew:shfmt" = "latest"
+"brew:stylua" = "latest"
+"brew:taplo" = "latest"
+"brew:tmux" = "latest"
+"brew:tree-sitter" = "latest"
+"brew:yaml-language-server" = "latest"
+"brew:yamlfmt" = "latest"
+"brew:zoxide" = "latest"
+
+[bootstrap.packages."brew-cask:1password"]
+version = "latest"
+[bootstrap.packages."brew-cask:1password/tap/1password-cli"]
+version = "latest"
+[bootstrap.packages."brew-cask:abue-ammar/tinycast/tinycast"]
+version = "latest"
+[bootstrap.packages."brew-cask:anki"]
+version = "latest"
+[bootstrap.packages."brew-cask:battle-net"]
+version = "latest"
+[bootstrap.packages."brew-cask:calibre"]
+version = "latest"
+[bootstrap.packages."brew-cask:chatgpt"]
+version = "latest"
+[bootstrap.packages."brew-cask:claude-code@latest"]
+version = "latest"
+[bootstrap.packages."brew-cask:epic-games"]
+version = "latest"
+[bootstrap.packages."brew-cask:ghostty"]
+version = "latest"
+[bootstrap.packages."brew-cask:helium-browser"]
+version = "latest"
+[bootstrap.packages."brew-cask:iina"]
+version = "latest"
+[bootstrap.packages."brew-cask:jellyfin-media-player"]
+version = "latest"
+[bootstrap.packages."brew-cask:minecraft"]
+version = "latest"
+[bootstrap.packages."brew-cask:netnewswire"]
+version = "latest"
+[bootstrap.packages."brew-cask:nikitabobko/tap/aerospace"]
+version = "latest"
+[bootstrap.packages."brew-cask:obsidian"]
+version = "latest"
+[bootstrap.packages."brew-cask:orbstack"]
+version = "latest"
+[bootstrap.packages."brew-cask:prismlauncher"]
+version = "latest"
+[bootstrap.packages."brew-cask:rectangle"]
+version = "latest"
+[bootstrap.packages."brew-cask:signal"]
+version = "latest"
+[bootstrap.packages."brew-cask:tailscale-app"]
+version = "latest"
+[bootstrap.packages."brew-cask:telegram"]
+version = "latest"
+[bootstrap.packages."brew-cask:topnotch"]
+version = "latest"
+[bootstrap.packages."brew-cask:whatsapp"]
+version = "latest"
+[bootstrap.packages."brew-cask:zed"]
+version = "latest"
+[bootstrap.packages."brew-cask:zoom"]
+version = "latest"
+[bootstrap.packages."brew-cask:zulu@8"]
+version = "latest"
+
+[bootstrap.user]
+login_shell = "/opt/homebrew/bin/bash"
+
+# macOS defaults. `apps` is deliberately omitted so pinned Dock tiles are left
+# under the user's control; add a list of .app paths here to manage them.
+
+[bootstrap.macos.dock]
+autohide = true
+largesize = 64
+magnification = true
+show_recents = false
+tilesize = 58
+
+[bootstrap.macos.finder]
+preferred_view_style = "column"
+save_new_documents_to_cloud = false
+show_all_files = true
+show_extensions_warning = false
+show_pathbar = true
+show_status_bar = true
+sort_folders_first = true
+
+[bootstrap.macos.keyboard]
+automatic_capitalization = false
+automatic_spelling_correction = false
+initial_key_repeat = 10
+key_repeat = 5
+press_and_hold = false
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
+[bootstrap.macos.defaults.NSGlobalDomain]
+AppleFontSmoothing = 2
+AppleICUForce24HourTime = true
+AppleInterfaceStyle = "Dark"
+AppleMeasurementUnits = "Centimeters"
+AppleMetricUnits = 1
+AppleScrollerPagingBehavior = true
+AppleShowAllExtensions = true
+AppleShowAllFiles = true
+AppleTemperatureUnit = "Celsius"
+NSAutomaticDashSubstitutionEnabled = false
+NSAutomaticInlinePredictionEnabled = false
+NSAutomaticPeriodSubstitutionEnabled = false
+NSAutomaticQuoteSubstitutionEnabled = false
+NSDisableAutomaticTermination = true
+NSWindowResizeTime = 0.1
+_HIHideMenuBar = true
+"com.apple.mouse.scaling" = 2.0
+"com.apple.mouse.tapBehavior" = 1
+"com.apple.swipescrolldirection" = false
+
+[bootstrap.macos.defaults."com.apple.finder"]
+AppleShowAllExtensions = true
+FXRemoveOldTrashItems = true
+# Finder stores the Home folder as the opaque token PfHm, not as "Home".
+NewWindowTarget = "PfHm"
+ShowMountedServersOnDesktop = true
+_FXShowPosixPathInTitle = true
+
+# AppleFnUsageType is an integer enum on current macOS: 1 is Change Input Source.
+[bootstrap.macos.defaults."com.apple.HIToolbox"]
+AppleFnUsageType = 1
+
+[bootstrap.macos.defaults."com.apple.LaunchServices"]
+LSQuarantine = false
+
+[bootstrap.macos.defaults."com.apple.SoftwareUpdate"]
+AutomaticallyInstallMacOSUpdates = true
+
+[bootstrap.macos.defaults."com.apple.AppleMultitouchTrackpad"]
+ActuationStrength = 0
+
+[bootstrap.macos.defaults."com.apple.controlcenter"]
+BatteryShowPercentage = false
+Bluetooth = false
+Display = false
+FocusModes = false
+NowPlaying = false
+Sound = false
+
+[bootstrap.macos.defaults."com.apple.desktopservices"]
+DSDontWriteNetworkStores = true
+DSDontWriteUSBStores = true
+
+[bootstrap.macos.defaults.menuExtraClock]
+Show24Hour = true
+ShowDate = 1
+ShowDayOfMonth = true
+ShowDayOfWeek = false
+ShowSeconds = true
+
+# Patch individual entries instead of replacing the whole AppleSymbolicHotKeys
+# dictionary, so unrelated shortcuts keep their parameters.
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["60", "enabled"]
+value = false
+
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["61", "enabled"]
+value = false
+
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.symbolichotkeys"
+key = "AppleSymbolicHotKeys"
+path = ["64", "enabled"]
+value = false
+
+# Dotfiles. `mode = "symlink"` keeps edits in this repository and lets Neovim
+# write back to nvim-pack-lock.json through the link.
+[dotfiles]
+"~/.bash_profile" = { source = "home/bash_profile", mode = "symlink" }
+"~/.bashrc" = { source = "home/bashrc", mode = "symlink" }
+"~/.config/aerospace/aerospace.toml" = { source = "home/aerospace/aerospace.toml", mode = "symlink" }
+"~/.config/bat/config" = { source = "home/bat/config", mode = "symlink" }
+"~/.config/direnv/direnv.toml" = { source = "home/direnv/direnv.toml", mode = "symlink" }
+"~/.config/git/config" = { source = "home/git/config", mode = "symlink" }
+"~/.config/git/ignore" = { source = "home/git/ignore", mode = "symlink" }
+"~/.config/ghostty/config" = { source = "home/ghostty/config", mode = "symlink" }
+"~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
+"~/.config/ripgrep/ripgreprc" = { source = "home/ripgrep/ripgreprc", mode = "symlink" }
+"~/.config/tmux/tmux.conf" = { source = "home/tmux/tmux.conf", mode = "symlink" }
+"~/.inputrc" = { source = "home/inputrc", mode = "symlink" }
+"~/.profile" = { source = "home/profile", mode = "symlink" }
+"~/.ssh/config" = { source = "home/ssh/config", mode = "symlink" }

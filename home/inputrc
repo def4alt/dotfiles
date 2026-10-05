@@ -1,0 +1,10 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+
+$include /etc/inputrc
+set colored-stats on
+set completion-ignore-case on
+set mark-symlinked-directories on
+set show-all-if-ambiguous on
+set visible-stats on
+"\e[A": history-search-backward
+"\e[B": history-search-forward

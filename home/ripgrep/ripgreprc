@@ -1,0 +1,10 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+# ripgrep reads this file by default from ~/.config/ripgrep/ripgreprc.
+--color=auto
+--column
+--hidden
+--line-number
+--no-heading
+--smart-case
+--glob=!*.{min.js,swp,o,zip}
+--glob=!{.cache,.git,node_modules,vendor}/*
