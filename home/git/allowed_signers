@@ -1,0 +1,5 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+# Principals allowed to sign commits for this repository, so that
+# `git verify-commit` and `git log --show-signature` can check signatures.
+# Format: <principal> <ssh-key>
+andrii.olkhovych@tum.de ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5WXSF7FL2yTpqQjsZlSkIkvs7KqYxovtj3qWP72ayH

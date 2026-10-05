@@ -16,6 +16,9 @@
 
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+	# Without this, git cannot verify SSH signatures at all: it reports every
+	# commit as unverifiable instead of checking it against a known principal.
+	allowedSignersFile = "~/.config/git/allowed_signers"
 
 [init]
 	defaultBranch = "main"

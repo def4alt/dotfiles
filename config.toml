@@ -252,6 +252,7 @@ value = false
 "~/.config/bat/config" = { source = "home/bat/config", mode = "symlink" }
 "~/.config/direnv/direnv.toml" = { source = "home/direnv/direnv.toml", mode = "symlink" }
 "~/.config/git/config" = { source = "home/git/config", mode = "symlink" }
+"~/.config/git/allowed_signers" = { source = "home/git/allowed_signers", mode = "symlink" }
 "~/.config/git/ignore" = { source = "home/git/ignore", mode = "symlink" }
 "~/.config/ghostty/config" = { source = "home/ghostty/config", mode = "symlink" }
 "~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
