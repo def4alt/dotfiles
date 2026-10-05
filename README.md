@@ -202,14 +202,26 @@ Install and run the optional Git hooks with `pre-commit install` and
 This repository previously used nix-darwin and Home Manager. A few behaviours do
 not carry over and are worth knowing about:
 
-- **Touch ID for `sudo` is not declarative.** The old
-  `security.pam.services.sudo_local.touchIdAuth` has no mise equivalent. Enable
-  it once in System Settings, or by editing
-  `/etc/pam.d/sudo_local`.
+- **Touch ID for `sudo` is outside mise.** The old
+  `security.pam.services.sudo_local.touchIdAuth` has no mise equivalent, so
+  `/etc/pam.d/sudo_local` is managed by hand:
+
+  ```sh
+  cat /etc/pam.d/sudo_local
+  # auth       sufficient     pam_tid.so
+  ```
+
+  `sufficient` means an unavailable fingerprint prompt falls through to the
+  password, so this cannot lock you out.
 - **`dockutil` is not used.** `[bootstrap.macos.dock]` has an `apps` list that
   manages pinned Dock tiles declaratively and preserves the bookmarks macOS adds
   to them, which `dockutil` cannot do. The list is deliberately omitted here
   because the Dock currently pins no applications; add `.app` paths to pin them.
+- **`brew` is not installed.** mise pours Homebrew formulae itself and reads the
+  Cellar directly, so the `brew` CLI is genuinely optional. It is absent here,
+  and nothing in this configuration needs it: `mise bootstrap packages` covers
+  install, status, upgrade and prune. Restore it only if you want `brew search`,
+  `brew info` or ad-hoc installs.
 - **App Store apps are not managed.** No `mas:` packages are declared because
   none are installed. Add `brew:mas` and `mas:<id>` entries when needed.
 - **Neovim language servers are partially provisioned.** `config.toml` installs

@@ -22,7 +22,6 @@ LC_COLLATE = "C"
 # its `credential` field. `op read` needs vault, item and field, so the two-field
 # form `op://Private/OpenCode` is not valid.
 OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
-SYSTEMD_EDITOR = "nvim"
 VISUAL = "nvim"
 
 # Evaluating third-party tap cask definitions (aerospace, tinycast,
@@ -64,13 +63,15 @@ credential_command = 'gh auth token --hostname "$MISE_CREDENTIAL_HOST"'
 "brew:neovim" = "latest"
 "brew:node" = "latest"
 "brew:oh-my-posh" = "latest"
-"brew:python@3.13" = "latest"
 "brew:ripgrep" = "latest"
 "brew:shellcheck" = "latest"
 "brew:shfmt" = "latest"
 "brew:stylua" = "latest"
 "brew:taplo" = "latest"
 "brew:tmux" = "latest"
+# Required at runtime: neovim links against libtree-sitter, so removing this
+# breaks the nvim binary with a dyld "Library not loaded" error. It is the
+# library, not the CLI (Homebrew's tree-sitter-cli is a separate formula).
 "brew:tree-sitter" = "latest"
 "brew:yaml-language-server" = "latest"
 "brew:yamlfmt" = "latest"
