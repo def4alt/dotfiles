@@ -217,11 +217,16 @@ not carry over and are worth knowing about:
   manages pinned Dock tiles declaratively and preserves the bookmarks macOS adds
   to them, which `dockutil` cannot do. The list is deliberately omitted here
   because the Dock currently pins no applications; add `.app` paths to pin them.
-- **`brew` is not installed.** mise pours Homebrew formulae itself and reads the
-  Cellar directly, so the `brew` CLI is genuinely optional. It is absent here,
-  and nothing in this configuration needs it: `mise bootstrap packages` covers
-  install, status, upgrade and prune. Restore it only if you want `brew search`,
-  `brew info` or ad-hoc installs.
+- **Homebrew is installed but not required.** mise pours formulae itself and
+  reads the Cellar directly, so it never shells out to `brew`. The `brew` CLI is
+  present anyway for `brew search`, `brew info` and ad-hoc installs, cloned from
+  the Homebrew repository at the latest release rather than run through its
+  installer, which would have cleared the Cellar and Caskroom.
+
+  `brew doctor` reports one expected warning: the `1password-cli` cask is
+  mise-owned, so it has no Homebrew metadata and brew will not upgrade it. mise
+  manages that cask; run `brew reinstall --cask --force 1password-cli` if you
+  would rather brew own it, at the cost of mise no longer being able to prune it.
 - **App Store apps are not managed.** No `mas:` packages are declared because
   none are installed. Add `brew:mas` and `mas:<id>` entries when needed.
 - **Neovim language servers are partially provisioned.** `config.toml` installs
