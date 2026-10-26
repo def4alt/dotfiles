@@ -2,11 +2,9 @@
 
 Declarative configuration for `alderbook`, an Apple silicon Mac managed by
 [mise](https://mise.jdx.dev). `config.toml` is the single source of truth: it
-declares host packages, macOS preferences, dotfiles, the login shell and the
-verification tasks.
+declares host packages, macOS preferences, dotfiles and the login shell.
 
-Start with [AGENTS.md](AGENTS.md) if you are an agent, and
-[docs/HISTORY.md](docs/HISTORY.md) for why the system looks like this.
+See [docs/HISTORY.md](docs/HISTORY.md) for why the system looks like this.
 
 ## Repository layout
 
@@ -14,7 +12,7 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 .
 ├── config.toml            # Tools, packages, macOS defaults, dotfiles, tasks
 ├── mise.lock              # Pinned versions of the [tools] entries
-├── AGENTS.md              # Repo workflow; machine rules are global
+├── AGENTS.md              # Repo loop and traps
 ├── home/                  # Dotfile sources, symlinked into $HOME
 │   ├── bash_profile.sh    # Login shell: sources profile.sh then bashrc.sh
 │   ├── bashrc.sh          # Interactive shell, mise activation, aliases
@@ -24,7 +22,7 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 │   ├── gitignore          # Global git ignore
 │   ├── git/               # allowed_signers for SSH signature verification
 │   ├── npmrc              # Global prefix and allow-scripts
-│   ├── agents/AGENTS.md   # Machine-wide agent rules (deployed 4x)
+│   ├── agents/AGENTS.md   # Working rules, linked into 3 agent dirs
 │   ├── ssh_config         # SSH hosts, ControlMaster, 1Password agent
 │   ├── bat.conf           # bat theme
 │   ├── ghostty.conf       # Terminal emulator
@@ -137,11 +135,7 @@ ripgrep has **no** default configuration file: without `RIPGREP_CONFIG_PATH` it
 reads none at all. `home/profile.sh` and `home/bashrc.sh` export it, pointing at
 `home/ripgrep/ripgreprc`, which turns on `--hidden`, `--smart-case`, `--column`
 and truncates very long lines. Removing either export silently disables all of
-it, which is why the chain is documented in `AGENTS.md` instead of being
-asserted by a script.
-
-`~/src/AGENTS.md` documents the checkout layout and the recommended globs for
-searching only first-party code.
+it, so the chain is recorded once, in `AGENTS.md`.
 
 ## Terminal
 
@@ -242,17 +236,13 @@ Without `--cd` the server uses the client's working directory. `mise://env`
 returns real values, so add `"env": { "MISE_SAFE": "1" }` to the server entry for
 projects you have not reviewed; safe mode disables env reads and `run_task`.
 
-Agent-facing state is deliberately out of the repository but covered by the same
-verification:
+Agent-facing files, for whoever maintains them:
 
-- Personal working rules are one short file, `home/agents/AGENTS.md`, deployed to
-  `~/.agents/AGENTS.md`, `~/.pi/agent/AGENTS.md`, `~/.codex/AGENTS.md` and
-  `~/.claude/CLAUDE.md`. The repo and `~/src` have their own short files that
-  defer to it.
-- Skills live once in `~/.agents/skills` (currently `agent-browser`,
-  `content-strategy`, `copywriting`, `marketing-psychology`, `herdr`);
-  `~/.pi/agent/skills` and `~/.claude/skills` are symlinks into it. New skills
-  are opt-in, not automatic.
+- `home/agents/AGENTS.md` is the only working-rules file. It is symlinked to
+  `~/.pi/agent/AGENTS.md`, `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`, which
+  each client loads on its own; nothing else restates it.
+- Skills live in `~/.agents/skills` and are symlinked into the same two skill
+  directories. Install with `npx skills add <repo> --skill <name> -g`.
 - Agent state grows without bound: `.claude/jobs`, `.codex/sessions`,
   `.pi/agent/sessions`, `~/src/scratch`. Prune by hand when it matters.
 

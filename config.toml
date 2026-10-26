@@ -306,7 +306,6 @@ value = false
 "~/.config/ghostty/config" = { source = "home/ghostty.conf", mode = "symlink" }
 "~/.config/herdr/config.toml" = { source = "home/herdr/config.toml", mode = "symlink" }
 "~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
-"~/.agents/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
 "~/.pi/agent/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
 "~/.codex/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
 "~/.claude/CLAUDE.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }

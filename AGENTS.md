@@ -1,7 +1,6 @@
 # dotfiles
 
-Machine configuration. `README.md` is the full picture; personal working rules
-are global (`~/.agents/AGENTS.md`). This file is the loop plus the traps.
+Machine configuration. The loop, then the traps.
 
 ## Loop
 
