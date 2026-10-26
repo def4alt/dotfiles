@@ -118,6 +118,25 @@ else
   bad "$dangling dangling skill link(s) in ~/.pi/agent/skills"
 fi
 
+echo "agent mcp"
+# mise mcp is registered outside this repo, in three different formats. It is
+# easy to lose silently when a client rewrites its own config.
+for cfg in "$HOME/.pi/agent/mcp.json" "$HOME/.claude.json"; do
+  [ -f "$cfg" ] || continue
+  if command -v python3 >/dev/null; then
+    if python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if "mise" in (d.get("mcpServers") or {}) else 1)' "$cfg" 2>/dev/null; then
+      ok "$(basename "$cfg") registers mise"
+    else
+      bad "$(basename "$cfg") has no mise MCP server"
+    fi
+  fi
+done
+if grep -q '^\[mcp_servers\.mise\]' "$HOME/.codex/config.toml" 2>/dev/null; then
+  ok "codex registers mise"
+else
+  bad "codex config has no [mcp_servers.mise]"
+fi
+
 echo "deployed symlinks"
 broken=0
 while IFS= read -r target; do

@@ -36,6 +36,10 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 └── docs/HISTORY.md        # Migration notes and retired components
 ```
 
+Behaviour here is checked against the installed version's own documentation —
+`mise <command> --help`, `mise.jdx.dev/llms.txt`, `ghostty +show-config --docs`,
+`:help vim.pack` — because these tools change faster than any summary of them.
+
 Source names encode the file's syntax, not its deployed path: the `[dotfiles]`
 table below already carries the path, so `bashrc.sh` and `gitconfig` stay
 visible to `shellcheck`, `shfmt`, `rg -t` and editors.
@@ -217,12 +221,30 @@ mise bootstrap packages upgrade --manager brew-cask  # Update mise-owned casks
 mise run clean -- --apply                            # Apply retention
 ```
 
+The Touch ID rule for `sudo` is declared as `[bootstrap.files."/etc/pam.d/sudo_local"]`,
+so preview it with `mise bootstrap files apply --dry-run` instead of editing the
+file by hand.
+
 Inside Neovim, run `:lua vim.pack.update()` and confirm with `:write` to update
 the pinned plugin revisions in `home/nvim/nvim-pack-lock.json`. Format Lua with
 `stylua`, shell code with `shfmt`, YAML with `yamlfmt` and TOML with `taplo`;
 `pre-commit install` wires all of that plus `gitleaks` into every commit.
 
 ## Agents
+
+`mise mcp` is registered as an MCP server in pi, Claude Code and Codex, so an
+agent can read the active toolchain, environment and task list instead of
+guessing, and run declared tasks:
+
+```sh
+pi mcp add mise -- /Users/def4alt/.local/bin/mise mcp
+claude mcp add --scope user mise -- /Users/def4alt/.local/bin/mise mcp
+```
+
+The absolute path matters: GUI-launched clients do not inherit the shell `PATH`.
+Without `--cd` the server uses the client's working directory. `mise://env`
+returns real values, so add `"env": { "MISE_SAFE": "1" }` to the server entry for
+projects you have not reviewed; safe mode disables env reads and `run_task`.
 
 Agent-facing state is deliberately out of the repository but covered by the same
 verification:

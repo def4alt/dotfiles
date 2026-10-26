@@ -57,6 +57,25 @@ pre-commit run --all-files      # gitleaks, taplo, shellcheck, shfmt, yamllint
 | `docs/HISTORY.md` | Why the system looks like this (nix-darwin migration) |
 | `mise.lock` | Pinned versions for `[tools]`; `mise lock --bump` refreshes |
 
+## Verify against the tool, not your memory
+
+These tools release often and their flags move. Before changing configuration,
+check the installed version's own docs: `mise <command> --help`,
+`mise.jdx.dev/llms.txt`, `ghostty +show-config --docs`, `rg --help`,
+`:help vim.pack` in Neovim, `herdr --default-config`. A recommended option in a
+blog post is not evidence.
+
+Known-good facts that were verified this way and are easy to get wrong:
+
+- `mise mcp` is registered in `~/.pi/agent/mcp.json`, `~/.claude.json` and
+  `~/.codex/config.toml`. `mise run check` fails if any of them loses it.
+- `mise://env` exposes real environment values; `MISE_SAFE=1` in the server
+  entry disables that and `run_task`.
+- `/etc/pam.d/sudo_local` is declared in `[bootstrap.files]`; never edit it by
+  hand, and use `mise bootstrap files apply --dry-run` to inspect.
+- `vim.pack.add()` without `version` follows the default branch and the
+  lockfile pins the revision; that is the documented combination, not a bug.
+
 ## Red lines
 
 - Do not commit secrets, tokens or `.env` contents.

@@ -148,6 +148,19 @@ version = "latest"
 [bootstrap.packages."brew-cask:zulu@8"]
 version = "latest"
 
+# Touch ID for sudo. `sufficient` means an unavailable fingerprint prompt falls
+# through to the password, so this cannot lock anyone out. Previously managed by
+# hand; declaring it keeps a fresh machine reproducible.
+[bootstrap.files."/etc/pam.d/sudo_local"]
+content = """
+# Enables Touch ID for sudo. 'sufficient' means a failed or unavailable
+# Touch ID prompt falls through to the normal password prompt.
+auth       sufficient     pam_tid.so
+"""
+owner = "root"
+group = "wheel"
+mode = "0444"
+
 [bootstrap.user]
 login_shell = "/opt/homebrew/bin/bash"
 
