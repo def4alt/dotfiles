@@ -6,5 +6,4 @@
 - Scratch work goes in `~/src/scratch/<date>-<task>`, never in `~/Documents`.
 - Secrets are 1Password `op://` references only. Never write a value to disk, a
   repo or a config file.
-- Installed skills: `agent-browser`, `content-strategy`, `copywriting`,
-  `marketing-psychology`, `herdr`. Do not install or create more without asking.
+- Do not install or create skills without being asked.
