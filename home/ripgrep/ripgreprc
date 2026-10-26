@@ -1,10 +1,19 @@
 # Managed by mise: https://github.com/def4alt/dotfiles
-# ripgrep reads this file by default from ~/.config/ripgrep/ripgreprc.
+#
+# ripgrep has no default configuration file: without RIPGREP_CONFIG_PATH it
+# reads none at all. home/profile.sh and home/bashrc.sh point that variable
+# here, and `mise run check` asserts that the flags below are actually live.
 --color=auto
 --column
 --hidden
 --line-number
 --no-heading
 --smart-case
+
+# Agent ergonomics: a single minified line should not consume the context
+# window. Preview is truncated but still shows the match.
+--max-columns=256
+--max-columns-preview
+
 --glob=!*.{min.js,swp,o,zip}
 --glob=!{.cache,.git,node_modules,vendor}/*

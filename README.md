@@ -3,31 +3,42 @@
 Declarative configuration for `alderbook`, an Apple silicon Mac managed by
 [mise](https://mise.jdx.dev). `config.toml` is the single source of truth: it
 declares host packages, macOS preferences, dotfiles, the login shell and the
-bootstrap task.
+verification tasks.
+
+Start with [AGENTS.md](AGENTS.md) if you are an agent, and
+[docs/HISTORY.md](docs/HISTORY.md) for why the system looks like this.
 
 ## Repository layout
 
 ```text
 .
-├── config.toml            # Packages, macOS defaults, dotfiles, login shell
+├── config.toml            # Tools, packages, macOS defaults, dotfiles, tasks
 ├── mise.lock              # Pinned versions of the [tools] entries
-├── home/                  # Dotfile sources deployed by [dotfiles]
-│   ├── bashrc             # Interactive shell, mise activation, aliases
-│   ├── bash_profile       # Login shell, PATH
-│   ├── profile            # PATH for launchd and GUI sessions
+├── AGENTS.md              # Invariants and red lines for agents
+├── home/                  # Dotfile sources, symlinked into $HOME
+│   ├── bash_profile.sh    # Login shell: sources profile.sh then bashrc.sh
+│   ├── bashrc.sh          # Interactive shell, mise activation, aliases
+│   ├── profile.sh         # PATH and RIPGREP_CONFIG_PATH for login sessions
 │   ├── inputrc            # Readline bindings and options
-│   ├── git/               # Git config and global ignore, with delta
-│   ├── aerospace/         # AeroSpace window manager
-│   ├── bat/               # bat theme
-│   ├── direnv/            # direnv global configuration
-│   ├── ghostty/           # Terminal emulator
-│   ├── herdr/             # Agent multiplexer server and session configuration
-│   ├── nvim/              # Neovim configuration (kept writable)
-│   └── ssh/               # SSH client configuration
-├── tasks/bootstrap        # Idempotent post-install work (default handlers)
-├── config/                # Application exports not managed by mise
-└── .pre-commit-config.yaml
+│   ├── gitconfig          # Git config with SSH signing and delta
+│   ├── gitignore          # Global git ignore
+│   ├── git/               # allowed_signers for SSH signature verification
+│   ├── npmrc              # Global prefix and allow-scripts
+│   ├── ssh_config         # SSH hosts, ControlMaster, 1Password agent
+│   ├── bat.conf           # bat theme
+│   ├── ghostty.conf       # Terminal emulator
+│   ├── herdr/config.toml  # Agent multiplexer
+│   ├── ripgrep/ripgreprc  # Ripgrep flags (needs RIPGREP_CONFIG_PATH)
+│   └── nvim/              # Neovim configuration (kept writable)
+├── tasks/bootstrap.sh     # mise's bootstrap task: post-install work
+├── libexec/check.sh       # Asserts nothing is silently broken
+├── libexec/clean.sh       # Retention for state that only grows
+└── docs/HISTORY.md        # Migration notes and retired components
 ```
+
+Source names encode the file's syntax, not its deployed path: the `[dotfiles]`
+table below already carries the path, so `bashrc.sh` and `gitconfig` stay
+visible to `shellcheck`, `shfmt`, `rg -t` and editors.
 
 ## Bootstrap
 
@@ -81,8 +92,11 @@ mise bootstrap                  # Re-converge everything (the old `update`)
 mise bootstrap status           # Report drift across every section
 mise bootstrap status --missing # Exit non-zero when something is out of sync
 mise dot status                 # Dotfiles only
-mise dot add ~/.bashrc          # Save an edit made in place back to home/bashrc
+mise dot add ~/.bashrc          # Save an edit made in place back to home/
 mise lock --global --bump       # Refresh pinned tool versions
+mise run check                  # Assert nothing is silently broken
+mise run clean                  # Show what retention would delete
+mise run clean -- --apply       # Actually delete it
 ```
 
 Inspect an individual section with `mise bootstrap <part> status`, where part is
@@ -93,35 +107,48 @@ one of `packages`, `dotfiles`, `macos defaults`, `macos launchd-agents`,
 
 `~/.bashrc`, `~/.bash_profile`, `~/.profile` and `~/.inputrc` are managed as
 whole files, so mise's own `[bootstrap.mise_shell_activate]` is intentionally not
-used: `mise activate bash` lives in `home/bashrc` instead.
+used: `mise activate bash` lives in `home/bashrc.sh` instead.
 
-`home/bash_profile` puts `/opt/homebrew/bin`, `~/.local/bin` and the mise shims
+`home/profile.sh` puts `/opt/homebrew/bin`, `~/.local/bin` and the mise shims
 directory on `PATH` before anything else runs. The order matters:
 `~/.local/bin` holds the `mise` binary itself, so `~/.bashrc` can evaluate
 `mise activate bash`, and it also holds `pi`, `roc`, `opencode` and `uv`, which
-are installed outside Homebrew. Everything optional in `home/bashrc` is guarded
-with `command -v`, so the shell still starts cleanly while packages are still
-being installed.
+are installed outside Homebrew. Everything optional is guarded with
+`command -v`, so the shell still starts cleanly while packages are being
+installed.
+
+`PAGER`, `LESS=-FRX` are exported so agent-driven commands never page or clear
+the screen.
 
 Check this independently of your current terminal, because an interactive session
 inherits a `PATH` that hides ordering mistakes:
 
 ```sh
-env -i HOME="$HOME" TERM=xterm PATH=/usr/bin:/bin /opt/homebrew/bin/bash -lic 'command -v mise nvim op roc'
+env -i HOME="$HOME" TERM=xterm PATH=/usr/bin:/bin /opt/homebrew/bin/bash -lic 'command -v mise nvim op'
 ```
 
 The login shell is `/opt/homebrew/bin/bash`. Homebrew's bash is required because
 the configuration uses bash 5 features (`globstar`, `cmdhist`); macOS's bundled
 bash 3.2 does not support them.
 
+## Search
+
+ripgrep has **no** default configuration file: without `RIPGREP_CONFIG_PATH` it
+reads none at all. `home/profile.sh` and `home/bashrc.sh` export it, pointing at
+`home/ripgrep/ripgreprc`, which turns on `--hidden`, `--smart-case`, `--column`
+and truncates very long lines. `mise run check` fails if either link in that
+chain breaks.
+
+`~/src/AGENTS.md` documents the checkout layout and the recommended globs for
+searching only first-party code.
+
 ## Terminal
 
 Ghostty runs `bash -lic "herdr"`, so terminal sessions live in the Herdr server
 and outlive the terminal that started them; `prefix+q` detaches and running
 `herdr` again reattaches. `home/herdr/config.toml` keeps the `ctrl+space` prefix
-from the previous tmux configuration (Herdr defaults to `ctrl+b`) and pins
-`terminal.default_shell`/`terminal.shell_mode` so new panes are login shells of
-Homebrew's bash instead of whatever `$SHELL` holds.
+and pins `terminal.default_shell`/`terminal.shell_mode` so new panes are login
+shells of Homebrew's bash instead of whatever `$SHELL` holds.
 
 Herdr reads its configuration when the server starts. After editing
 `home/herdr/config.toml`, apply it without stopping panes:
@@ -142,34 +169,28 @@ herdr workspace close <workspace_id>
 ## Secrets
 
 Secrets are not stored in this repository. They live in 1Password and are read on
-demand through the `op` CLI, which `bootstrap.packages` installs as
-`1password/tap/1password-cli`.
-
-Sign in once per session, or set up the desktop app integration so no shell
-prompt is needed:
+demand through the `op` CLI, installed by mise from `1password/tap`.
 
 ```sh
-op signin                 # interactive sign-in
+op signin                 # interactive sign-in per session
 eval "$(op signin)"       # or: authenticate the current shell
 op plugin init            # enable the 1Password desktop app integration
 ```
 
-The key lives in the `OpenCode` item in the `Private` vault, which is a 1Password
-**API Credential**, so the value is in its `credential` field. `config.toml`
-declares only the opaque reference, never the value:
+`config.toml` declares only the opaque reference, never the value:
 
 ```toml
 [env]
 OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
 ```
 
-Note that `op read` requires **vault, item and field**, so the shorter
+`op read` requires **vault, item and field**, so the shorter
 `op://Private/OpenCode` is rejected as "too few '/'".
 
-`home/bashrc` wraps `opencode` and `pi` so each invocation resolves the key with
-`op read` and passes it to that one process only. Nothing sensitive is written to
-disk or exported into the environment of unrelated processes, and both wrappers
-degrade to running without the key when `op` is unavailable.
+`home/bashrc.sh` wraps `opencode` and `pi` so each invocation resolves the key
+and passes it to that one process only. Nothing sensitive is written to disk or
+exported into the environment of unrelated processes, and both wrappers degrade
+to running without the key when `op` is unavailable.
 
 To check a reference resolves, without printing the secret:
 
@@ -177,9 +198,8 @@ To check a reference resolves, without printing the secret:
 op read "op://Private/OpenCode/credential" | wc -c
 ```
 
-GitHub access is handled separately, by the `gh` CLI rather than 1Password,
-because `gh` already holds a token and mise can reuse it without a second
-credential to manage:
+GitHub access is handled separately by the `gh` CLI, so mise can reuse its token
+without a second credential to manage:
 
 ```toml
 [settings.github]
@@ -191,70 +211,29 @@ Check which source mise selected with `mise token github`.
 ## Maintenance
 
 ```sh
-mise lock --global --bump       # Re-resolve pinned [tools] versions
-mise bootstrap packages upgrade --manager brew        # Update formulae
-mise bootstrap packages upgrade --manager brew-cask   # Update casks that do not self-update
+mise lock --global --bump                            # Re-resolve pinned [tools]
+mise bootstrap packages upgrade --manager brew       # Update formulae
+mise bootstrap packages upgrade --manager brew-cask  # Update mise-owned casks
+mise run clean -- --apply                            # Apply retention
 ```
 
 Inside Neovim, run `:lua vim.pack.update()` and confirm with `:write` to update
 the pinned plugin revisions in `home/nvim/nvim-pack-lock.json`. Format Lua with
-`stylua`, shell code with `shfmt`, YAML with `yamlfmt` and TOML with `taplo`.
+`stylua`, shell code with `shfmt`, YAML with `yamlfmt` and TOML with `taplo`;
+`pre-commit install` wires all of that plus `gitleaks` into every commit.
 
-Install and run the optional Git hooks with `pre-commit install` and
-`pre-commit run --all-files`.
+## Agents
 
-## Notes on the migration from nix-darwin
+Agent-facing state is deliberately out of the repository but covered by the same
+verification:
 
-This repository previously used nix-darwin and Home Manager. A few behaviours do
-not carry over and are worth knowing about:
+- `AGENTS.md` (this repo) and `~/src/AGENTS.md` carry the invariants.
+- Skills live once in `~/.agents/skills`; `~/.pi/agent/skills` and
+  `~/.claude/skills` are symlinks into it. `mise run check` fails on a dangling
+  link, which is how five silently-lost skills were found.
+- `mise run clean` applies retention to `~/.claude/jobs`,
+  `~/.claude/projects`, `~/.codex/sessions`, `~/.pi/agent/sessions`,
+  `~/src/scratch` and `~/backups`.
 
-- **Touch ID for `sudo` is outside mise.** The old
-  `security.pam.services.sudo_local.touchIdAuth` has no mise equivalent, so
-  `/etc/pam.d/sudo_local` is managed by hand:
-
-  ```sh
-  cat /etc/pam.d/sudo_local
-  # auth       sufficient     pam_tid.so
-  ```
-
-  `sufficient` means an unavailable fingerprint prompt falls through to the
-  password, so this cannot lock you out.
-- **Caps Lock is remapped back inside mise.** The nix-darwin
-  `system.keyboard.remapCapsLockToControl` setting is replaced by
-  `[bootstrap.macos.launchd.agents.remap-caps-lock]` in `config.toml`: a
-  `hidutil` mapping does not survive a reboot, so the LaunchAgent reapplies
-  Caps Lock → Control at every login. Inspect the live mapping with
-  `hidutil property --get "UserKeyMapping"`.
-- **`dockutil` is not used.** `[bootstrap.macos.dock]` has an `apps` list that
-  manages pinned Dock tiles declaratively and preserves the bookmarks macOS adds
-  to them, which `dockutil` cannot do. The list is deliberately omitted here
-  because the Dock currently pins no applications; add `.app` paths to pin them.
-- **Homebrew is installed but not required.** mise pours formulae itself and
-  reads the Cellar directly, so it never shells out to `brew`. The `brew` CLI is
-  present anyway for `brew search`, `brew info` and ad-hoc installs, cloned from
-  the Homebrew repository at the latest release rather than run through its
-  installer, which would have cleared the Cellar and Caskroom.
-
-  `brew doctor` reports one expected warning: the `1password-cli` cask is
-  mise-owned, so it has no Homebrew metadata and brew will not upgrade it. mise
-  manages that cask; run `brew reinstall --cask --force 1password-cli` if you
-  would rather brew own it, at the cost of mise no longer being able to prune it.
-- **App Store apps are not managed.** No `mas:` packages are declared because
-  none are installed. Add `brew:mas` and `mas:<id>` entries when needed.
-- **Neovim language servers are partially provisioned.** `config.toml` installs
-  the servers that Homebrew provides. `home/nvim/plugin/40_plugins.lua` also
-  references `cssls`, `html`, `jsonls`, `oxlint`, `oxfmt`, `pyright`, `zls`,
-  `gofumpt`, `rustfmt` and `zigfmt`, which Homebrew does not package for macOS.
-  Those servers simply do not start until you add them. For `jsonls`, add
-  `"npm:vscode-json-languageserver" = "<version>"` under `[tools]`.
-- **Third-party taps need GitHub API access.** `aerospace`, `tinycast` and
-  `1password-cli` come from taps, and mise resolves taps over the GitHub API.
-  The unauthenticated budget is small, and exhausting it makes any command that
-  inspects packages fail, so authenticate `gh` and confirm with
-  `mise token github` before running `mise bootstrap`.
-- **Formulae are not version-pinned.** Homebrew has no lockfile equivalent, so
-  `[bootstrap.packages]` tracks the current stable version of each formula the
-  way a `Brewfile` does. Only `ruby` is pinned, via `mise.lock`.
-- **`config/rectangle/` is not deployed.** It is kept as a reference; add a
-  `[dotfiles]` entry pointing at
-  `~/Library/Application Support/Rectangle/RectangleConfig.json` to manage it.
+See [docs/HISTORY.md](docs/HISTORY.md) for the nix-darwin migration notes and
+the list of retired components (tmux, AeroSpace, direnv).

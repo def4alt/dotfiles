@@ -18,3 +18,11 @@ Host zorya
 
 Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  # One connection per host instead of a handshake per command: agent-driven
+  # git-over-ssh runs dozens of short-lived ssh calls. %C is the short hashed
+  # path OpenSSH derives, so the socket path stays under the 104-byte limit.
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%C
+  ControlPersist 10m
+  ServerAliveInterval 30
+  ServerAliveCountMax 3

@@ -1,0 +1,11 @@
+# Managed by mise: https://github.com/def4alt/dotfiles
+#
+# Global installs go to ~/.local so they survive a Node upgrade: mise swaps
+# node versions per project, and anything installed into the version-specific
+# prefix disappears with it.
+prefix=${HOME}/.local
+
+# npm >= 9 refuses to run lifecycle scripts of dependencies, so a global CLI
+# with a postinstall step (opencode, googleworkspace) silently installs without
+# its binaries. Allow-list only the packages that need it.
+allow-scripts=@opencode/cli,@googleworkspace/cli

@@ -22,6 +22,11 @@ LC_COLLATE = "C"
 # its `credential` field. `op read` needs vault, item and field, so the two-field
 # form `op://Private/OpenCode` is not valid.
 OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
+# ripgrep reads no configuration file at all unless RIPGREP_CONFIG_PATH is set,
+# and agents spawn commands with `bash -c`, which sources no startup file. Set
+# it here so `mise activate`, `mise exec` and `mise run` all carry it; the shell
+# fallbacks in home/profile.sh and home/bashrc.sh cover pre-bootstrap sessions.
+RIPGREP_CONFIG_PATH = "{{env.HOME}}/.config/ripgrep/ripgreprc"
 VISUAL = "nvim"
 
 # Evaluating third-party tap cask definitions (tinycast, 1password-cli) needs a
@@ -101,6 +106,8 @@ version = "latest"
 [bootstrap.packages."brew-cask:claude-code@latest"]
 version = "latest"
 [bootstrap.packages."brew-cask:epic-games"]
+version = "latest"
+[bootstrap.packages."brew-cask:font-jetbrains-mono"]
 version = "latest"
 [bootstrap.packages."brew-cask:ghostty"]
 version = "latest"
@@ -286,5 +293,16 @@ value = false
 "~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
 "~/.config/ripgrep/ripgreprc" = { source = "home/ripgrep/ripgreprc", mode = "symlink" }
 "~/.inputrc" = { source = "home/inputrc", mode = "symlink" }
+"~/.npmrc" = { source = "home/npmrc", mode = "symlink" }
 "~/.profile" = { source = "home/profile.sh", mode = "symlink" }
 "~/.ssh/config" = { source = "home/ssh_config", mode = "symlink" }
+
+# Verification and retention. `check` fails on silent breakage (dead ripgrep
+# config, renamed source, missing hook); `clean` is a dry run unless --apply.
+[tasks.check]
+run = "repo=$(readlink -f \"$HOME/.config/mise\"); exec bash \"$repo/libexec/check.sh\""
+description = "Assert dotfile sources, ripgrep config, hooks and symlinks are live"
+
+[tasks.clean]
+run = "repo=$(readlink -f \"$HOME/.config/mise\"); exec bash \"$repo/libexec/clean.sh\" \"$@\""
+description = "Prune old agent state, scratch and backups (dry run; pass --apply)"

@@ -33,7 +33,6 @@ local languages = {
   "lua",
   "markdown",
   "markdown_inline",
-  "nix",
   "python",
   "roc",
   "rust",

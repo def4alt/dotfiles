@@ -29,10 +29,10 @@ repos:
       - id: shellcheck
         name: shellcheck
         entry: shellcheck -s bash --
-        files: ^(home|tasks)/.*\.sh$
+        files: ^(home|tasks|libexec)/.*\.sh$
         language: system
       - id: shfmt
         name: shfmt
         entry: shfmt -i 2 -ci -d --
-        files: ^(home|tasks)/.*\.sh$
+        files: ^(home|tasks|libexec)/.*\.sh$
         language: system
