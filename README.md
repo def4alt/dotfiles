@@ -172,8 +172,9 @@ different tool pin set. `[dotfiles]` entries that must not land on Linux carry
 `os = "macos"`.
 
 Its services are host-local and unaffected by those files: `claude-remote`,
-`opencode2-web`, `oc-auth-proxy`, four `hermes-*` units, `tailscaled`,
-`ts-emulator-proxy`, and `tailscale serve` on 4096/8443/8444/8445.
+`opencode2-web`, `oc-auth-proxy`, three `hermes-*` units, `tailscaled`,
+`ts-emulator-proxy`, and `tailscale serve` on 4096 (OpenCode web) and 8444
+(SilverBullet, in Docker). `hermes-webui` was removed; the host runs no web UI.
 
 ## Secrets
 

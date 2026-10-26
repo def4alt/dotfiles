@@ -10,11 +10,6 @@ Host halle
 Host zorya
   HostName 100.75.144.2
   User def4alt
-  IdentityFile ~/.ssh/id_ed25519_zorya
-  IdentitiesOnly yes
-  IdentityAgent none
-  ServerAliveInterval 30
-  ServerAliveCountMax 3
 
 Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

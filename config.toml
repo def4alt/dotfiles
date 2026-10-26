@@ -27,6 +27,7 @@ OP_OPENCODE_API_KEY = "op://Private/OpenCode/credential"
 # it here so `mise activate`, `mise exec` and `mise run` all carry it; the shell
 # fallbacks in home/profile.sh and home/bashrc.sh cover pre-bootstrap sessions.
 RIPGREP_CONFIG_PATH = "{{env.HOME}}/.config/ripgrep/ripgreprc"
+CLAUDE_CONFIG_DIR = "{{env.HOME}}/.config/claude"
 VISUAL = "nvim"
 
 # Evaluating third-party tap cask definitions (tinycast, 1password-cli) needs a

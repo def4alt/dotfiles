@@ -16,3 +16,9 @@ export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/.local/
 if [[ -r $HOME/.config/ripgrep/ripgreprc ]]; then
   export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
 fi
+
+# Claude Code keeps config and session state in CLAUDE_CONFIG_DIR; without it
+# they land as ~/.claude.json and ~/.claude in the home directory.
+if [[ -d $HOME/.config/claude ]]; then
+  export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+fi
