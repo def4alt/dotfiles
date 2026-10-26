@@ -161,6 +161,20 @@ herdr pane read <pane_id> --source visible --lines 5
 herdr workspace close <workspace_id>
 ```
 
+## Hosts
+
+`zorya` (Ubuntu 26.04, tailnet host) shares this repo's portable dotfiles —
+`nvim`, `herdr`, `inputrc`, `ripgreprc`, `bat`, and the agent rules file — but
+keeps its own shell startup files, git config and mise config, because they
+carry host-local state: the Claude Code OAuth token, the hermes PATH, and a
+different tool pin set. `[dotfiles]` entries that must not land on Linux carry
+`variants = [{ os = "macos" }]`, and `[bootstrap.packages]` entries carry
+`os = "macos"`.
+
+Its services are host-local and unaffected by those files: `claude-remote`,
+`opencode2-web`, `oc-auth-proxy`, four `hermes-*` units, `tailscaled`,
+`ts-emulator-proxy`, and `tailscale serve` on 4096/8443/8444/8445.
+
 ## Secrets
 
 Secrets are not stored in this repository. They live in 1Password and are read on

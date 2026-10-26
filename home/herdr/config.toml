@@ -8,10 +8,14 @@ onboarding = false
 # defaults to ctrl+b.
 keys.prefix = "ctrl+space"
 
-# Panes start as login shells of Homebrew's bash, so they read ~/.bash_profile
-# and get the PATH mise sets up regardless of the environment the Herdr server
-# inherited. Mirrors the old tmux `default-shell`/`default-command` pair.
-terminal.default_shell = "/opt/homebrew/bin/bash"
+# tmux muscle memory: " splits below, % splits right.
+keys.split_horizontal = 'prefix+"'
+keys.split_vertical = "prefix+%"
+
+# Panes start as login shells so they read ~/.bash_profile (macOS) or
+# ~/.profile (Linux) and inherit the PATH mise sets up, rather than whatever
+# the Herdr server was started with. default_shell is left unset so it follows
+# $SHELL, which is already the login bash on each machine.
 terminal.shell_mode = "login"
 
 [ui.sound]
