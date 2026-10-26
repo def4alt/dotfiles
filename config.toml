@@ -35,9 +35,10 @@ VISUAL = "nvim"
 # writable.
 [tools]
 ruby = "3"
-# Pin the Google Cloud CLI. Without a pin the mise shim cannot pick a version,
-# so `gcloud`, `gsutil`, `bq` and `docker-credential-gcloud` fail to run.
-gcloud = "587"
+# The gcloud shim needs a version request or `gcloud`, `gsutil`, `bq` and
+# `docker-credential-gcloud` cannot resolve one. Track the newest instead of a
+# fixed build so an upgrade is just `mise install`.
+gcloud = "latest"
 
 # mise resolves third-party taps through the GitHub API. Without a token that
 # is a small unauthenticated budget, and exhausting it fails any command that
