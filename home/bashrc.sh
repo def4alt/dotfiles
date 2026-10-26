@@ -9,13 +9,25 @@ if ! command -v mise >/dev/null; then
   export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
 fi
 
+# ~/.profile only reaches login shells, and ripgrep silently reads no config at
+# all without this, so repeat the export here for non-login interactive shells.
+if [[ -z ${RIPGREP_CONFIG_PATH:-} && -r $HOME/.config/ripgrep/ripgreprc ]]; then
+  export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
+fi
+
 # Put mise-managed tools on PATH. Guarded so a shell without mise still starts.
 if command -v mise >/dev/null; then
   eval "$(mise activate bash)"
 fi
 
+# Deterministic pager behaviour: agents read command output, so never clear the
+# screen on exit (-X) and pass short output straight through (-F).
+export LESS="-FRX"
+export PAGER=less
+
 if [[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]]; then
   if ! [[ -v BASH_COMPLETION_VERSINFO ]]; then
+    # shellcheck source=/dev/null
     . /opt/homebrew/etc/profile.d/bash_completion.sh
   fi
 fi
@@ -39,16 +51,12 @@ if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
   builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
 fi
 
-if [[ :$SHELLOPTS: =~ :(vi|emacs): ]] && command -v fzf >/dev/null; then
+if command -v fzf >/dev/null; then
   eval "$(fzf --bash)"
 fi
 
 if command -v oh-my-posh >/dev/null; then
   eval "$(oh-my-posh init bash --config onehalf.minimal)"
-fi
-
-if command -v direnv >/dev/null; then
-  eval "$(direnv hook bash)"
 fi
 
 if command -v zoxide >/dev/null; then

@@ -1,5 +1,5 @@
 * text=auto eol=lf
 
+# Generated or machine-managed, so diffs are noise rather than review material.
 *.lock linguist-generated=true
-**/hardware-configuration.nix linguist-generated=true
-config/rectangle/RectangleConfig.json linguist-generated=true
+home/nvim/nvim-pack-lock.json linguist-generated=true

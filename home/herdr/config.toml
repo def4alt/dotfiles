@@ -1,5 +1,8 @@
-onboarding = false
 # Managed by mise: https://github.com/def4alt/dotfiles
+#
+# Herdr rewrites this file when it migrates a setting, so keep the header first
+# and re-apply the rewrite by hand after a migration.
+onboarding = false
 
 # Keep the ctrl+space prefix from the tmux configuration this replaced; Herdr
 # defaults to ctrl+b.

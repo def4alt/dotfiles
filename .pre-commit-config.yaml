@@ -24,8 +24,15 @@ repos:
         entry: taplo format --
         files: \.toml$
         language: system
+      # Shell sources keep their .sh extension precisely so these two can find
+      # them: a file named `home/bashrc` matches neither pattern.
       - id: shellcheck
         name: shellcheck
         entry: shellcheck -s bash --
-        files: ^tasks/
+        files: ^(home|tasks)/.*\.sh$
+        language: system
+      - id: shfmt
+        name: shfmt
+        entry: shfmt -i 2 -ci -d --
+        files: ^(home|tasks)/.*\.sh$
         language: system
