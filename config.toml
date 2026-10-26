@@ -115,6 +115,8 @@ version = "latest"
 version = "latest"
 [bootstrap.packages."brew-cask:iina"]
 version = "latest"
+[bootstrap.packages."brew-cask:intellij-idea-oss"]
+version = "latest"
 [bootstrap.packages."brew-cask:jellyfin-media-player"]
 version = "latest"
 [bootstrap.packages."brew-cask:minecraft"]
@@ -304,18 +306,12 @@ value = false
 "~/.config/ghostty/config" = { source = "home/ghostty.conf", mode = "symlink" }
 "~/.config/herdr/config.toml" = { source = "home/herdr/config.toml", mode = "symlink" }
 "~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
+"~/.agents/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
+"~/.pi/agent/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
+"~/.codex/AGENTS.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
+"~/.claude/CLAUDE.md" = { source = "home/agents/AGENTS.md", mode = "symlink" }
 "~/.config/ripgrep/ripgreprc" = { source = "home/ripgrep/ripgreprc", mode = "symlink" }
 "~/.inputrc" = { source = "home/inputrc", mode = "symlink" }
 "~/.npmrc" = { source = "home/npmrc", mode = "symlink" }
 "~/.profile" = { source = "home/profile.sh", mode = "symlink" }
 "~/.ssh/config" = { source = "home/ssh_config", mode = "symlink" }
-
-# Verification and retention. `check` fails on silent breakage (dead ripgrep
-# config, renamed source, missing hook); `clean` is a dry run unless --apply.
-[tasks.check]
-run = "repo=$(readlink -f \"$HOME/.config/mise\"); exec bash \"$repo/libexec/check.sh\""
-description = "Assert dotfile sources, ripgrep config, hooks and symlinks are live"
-
-[tasks.clean]
-run = "repo=$(readlink -f \"$HOME/.config/mise\"); exec bash \"$repo/libexec/clean.sh\" \"$@\""
-description = "Prune old agent state, scratch and backups (dry run; pass --apply)"

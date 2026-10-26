@@ -14,7 +14,7 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 .
 ├── config.toml            # Tools, packages, macOS defaults, dotfiles, tasks
 ├── mise.lock              # Pinned versions of the [tools] entries
-├── AGENTS.md              # Invariants and red lines for agents
+├── AGENTS.md              # Repo workflow; machine rules are global
 ├── home/                  # Dotfile sources, symlinked into $HOME
 │   ├── bash_profile.sh    # Login shell: sources profile.sh then bashrc.sh
 │   ├── bashrc.sh          # Interactive shell, mise activation, aliases
@@ -24,6 +24,7 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 │   ├── gitignore          # Global git ignore
 │   ├── git/               # allowed_signers for SSH signature verification
 │   ├── npmrc              # Global prefix and allow-scripts
+│   ├── agents/AGENTS.md   # Machine-wide agent rules (deployed 4x)
 │   ├── ssh_config         # SSH hosts, ControlMaster, 1Password agent
 │   ├── bat.conf           # bat theme
 │   ├── ghostty.conf       # Terminal emulator
@@ -31,8 +32,6 @@ Start with [AGENTS.md](AGENTS.md) if you are an agent, and
 │   ├── ripgrep/ripgreprc  # Ripgrep flags (needs RIPGREP_CONFIG_PATH)
 │   └── nvim/              # Neovim configuration (kept writable)
 ├── tasks/bootstrap.sh     # mise's bootstrap task: post-install work
-├── libexec/check.sh       # Asserts nothing is silently broken
-├── libexec/clean.sh       # Retention for state that only grows
 └── docs/HISTORY.md        # Migration notes and retired components
 ```
 
@@ -98,9 +97,6 @@ mise bootstrap status --missing # Exit non-zero when something is out of sync
 mise dot status                 # Dotfiles only
 mise dot add ~/.bashrc          # Save an edit made in place back to home/
 mise lock --global --bump       # Refresh pinned tool versions
-mise run check                  # Assert nothing is silently broken
-mise run clean                  # Show what retention would delete
-mise run clean -- --apply       # Actually delete it
 ```
 
 Inspect an individual section with `mise bootstrap <part> status`, where part is
@@ -140,8 +136,9 @@ bash 3.2 does not support them.
 ripgrep has **no** default configuration file: without `RIPGREP_CONFIG_PATH` it
 reads none at all. `home/profile.sh` and `home/bashrc.sh` export it, pointing at
 `home/ripgrep/ripgreprc`, which turns on `--hidden`, `--smart-case`, `--column`
-and truncates very long lines. `mise run check` fails if either link in that
-chain breaks.
+and truncates very long lines. Removing either export silently disables all of
+it, which is why the chain is documented in `AGENTS.md` instead of being
+asserted by a script.
 
 `~/src/AGENTS.md` documents the checkout layout and the recommended globs for
 searching only first-party code.
@@ -218,7 +215,6 @@ Check which source mise selected with `mise token github`.
 mise lock --global --bump                            # Re-resolve pinned [tools]
 mise bootstrap packages upgrade --manager brew       # Update formulae
 mise bootstrap packages upgrade --manager brew-cask  # Update mise-owned casks
-mise run clean -- --apply                            # Apply retention
 ```
 
 The Touch ID rule for `sudo` is declared as `[bootstrap.files."/etc/pam.d/sudo_local"]`,
@@ -249,13 +245,16 @@ projects you have not reviewed; safe mode disables env reads and `run_task`.
 Agent-facing state is deliberately out of the repository but covered by the same
 verification:
 
-- `AGENTS.md` (this repo) and `~/src/AGENTS.md` carry the invariants.
-- Skills live once in `~/.agents/skills`; `~/.pi/agent/skills` and
-  `~/.claude/skills` are symlinks into it. `mise run check` fails on a dangling
-  link, which is how five silently-lost skills were found.
-- `mise run clean` applies retention to `~/.claude/jobs`,
-  `~/.claude/projects`, `~/.codex/sessions`, `~/.pi/agent/sessions`,
-  `~/src/scratch` and `~/backups`.
+- Personal working rules are one short file, `home/agents/AGENTS.md`, deployed to
+  `~/.agents/AGENTS.md`, `~/.pi/agent/AGENTS.md`, `~/.codex/AGENTS.md` and
+  `~/.claude/CLAUDE.md`. The repo and `~/src` have their own short files that
+  defer to it.
+- Skills live once in `~/.agents/skills` (currently `agent-browser`,
+  `content-strategy`, `copywriting`, `marketing-psychology`, `herdr`);
+  `~/.pi/agent/skills` and `~/.claude/skills` are symlinks into it. New skills
+  are opt-in, not automatic.
+- Agent state grows without bound: `.claude/jobs`, `.codex/sessions`,
+  `.pi/agent/sessions`, `~/src/scratch`. Prune by hand when it matters.
 
 See [docs/HISTORY.md](docs/HISTORY.md) for the nix-darwin migration notes and
 the list of retired components (tmux, AeroSpace, direnv).
