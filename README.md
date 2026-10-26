@@ -21,9 +21,9 @@ bootstrap task.
 │   ├── bat/               # bat theme
 │   ├── direnv/            # direnv global configuration
 │   ├── ghostty/           # Terminal emulator
+│   ├── herdr/             # Agent multiplexer server and session configuration
 │   ├── nvim/              # Neovim configuration (kept writable)
-│   ├── ssh/               # SSH client configuration
-│   └── tmux/              # tmux server and session configuration
+│   └── ssh/               # SSH client configuration
 ├── tasks/bootstrap        # Idempotent post-install work (default handlers)
 ├── config/                # Application exports not managed by mise
 └── .pre-commit-config.yaml
@@ -114,23 +114,29 @@ The login shell is `/opt/homebrew/bin/bash`. Homebrew's bash is required because
 the configuration uses bash 5 features (`globstar`, `cmdhist`); macOS's bundled
 bash 3.2 does not support them.
 
-## Terminal and tmux
+## Terminal
 
-Ghostty runs `bash -lic "tmux new-session -A -s main"`, so the tmux server is
-long-lived and outlives any shell change. tmux resolves `default-shell` once at
-server start, so `home/tmux/tmux.conf` sets it explicitly instead of relying on
-`$SHELL`. After changing the login shell, restart the server so existing sessions
-pick it up:
+Ghostty runs `bash -lic "herdr"`, so terminal sessions live in the Herdr server
+and outlive the terminal that started them; `prefix+q` detaches and running
+`herdr` again reattaches. `home/herdr/config.toml` keeps the `ctrl+space` prefix
+from the previous tmux configuration (Herdr defaults to `ctrl+b`) and pins
+`terminal.default_shell`/`terminal.shell_mode` so new panes are login shells of
+Homebrew's bash instead of whatever `$SHELL` holds.
+
+Herdr reads its configuration when the server starts. After editing
+`home/herdr/config.toml`, apply it without stopping panes:
 
 ```sh
-tmux show-options -g default-shell   # inspect
-tmux kill-server                     # new server re-reads tmux.conf
+herdr server reload-config
 ```
 
 Verify a pane has the full toolchain, not just a bare `PATH`:
 
 ```sh
-tmux new -d -s probe 'command -v mise nvim op; tmux wait-for probe'
+herdr workspace create --cwd "$HOME" --label probe --no-focus
+herdr pane run <pane_id> 'command -v mise nvim op'   # ids come from the JSON response
+herdr pane read <pane_id> --source visible --lines 5
+herdr workspace close <workspace_id>
 ```
 
 ## Secrets
@@ -213,6 +219,12 @@ not carry over and are worth knowing about:
 
   `sufficient` means an unavailable fingerprint prompt falls through to the
   password, so this cannot lock you out.
+- **Caps Lock is remapped back inside mise.** The nix-darwin
+  `system.keyboard.remapCapsLockToControl` setting is replaced by
+  `[bootstrap.macos.launchd.agents.remap-caps-lock]` in `config.toml`: a
+  `hidutil` mapping does not survive a reboot, so the LaunchAgent reapplies
+  Caps Lock → Control at every login. Inspect the live mapping with
+  `hidutil property --get "UserKeyMapping"`.
 - **`dockutil` is not used.** `[bootstrap.macos.dock]` has an `apps` list that
   manages pinned Dock tiles declaratively and preserves the bookmarks macOS adds
   to them, which `dockutil` cannot do. The list is deliberately omitted here

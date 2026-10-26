@@ -26,9 +26,12 @@ VISUAL = "nvim"
 
 # Evaluating third-party tap cask definitions (aerospace, tinycast,
 # 1password-cli) needs a Ruby 3+ runtime on PATH, which Homebrew cannot provide
-# until its prefix is writable. This is the only mise-managed tool.
+# until its prefix is writable.
 [tools]
 ruby = "3"
+# Pin the Google Cloud CLI. Without a pin the mise shim cannot pick a version,
+# so `gcloud`, `gsutil`, `bq` and `docker-credential-gcloud` fail to run.
+gcloud = "587"
 
 # mise resolves third-party taps through the GitHub API. Without a token that
 # is a small unauthenticated budget, and exhausting it fails any command that
@@ -58,17 +61,20 @@ credential_command = 'gh auth token --hostname "$MISE_CREDENTIAL_HOST"'
 "brew:gh" = "latest"
 "brew:git" = "latest"
 "brew:git-delta" = "latest"
+"brew:herdr" = "latest"
 "brew:jq" = "latest"
 "brew:lua-language-server" = "latest"
 "brew:neovim" = "latest"
 "brew:node" = "latest"
 "brew:oh-my-posh" = "latest"
+"brew:rclone" = "latest"
 "brew:ripgrep" = "latest"
 "brew:shellcheck" = "latest"
 "brew:shfmt" = "latest"
+"brew:sops" = "latest"
 "brew:stylua" = "latest"
+"brew:syncthing" = "latest"
 "brew:taplo" = "latest"
-"brew:tmux" = "latest"
 # Required at runtime: neovim links against libtree-sitter, so removing this
 # breaks the nvim binary with a dyld "Library not loaded" error. It is the
 # library, not the CLI (Homebrew's tree-sitter-cli is a separate formula).
@@ -166,6 +172,19 @@ press_and_hold = false
 [bootstrap.macos.trackpad]
 tap_to_click = true
 
+# Caps Lock as Left Control. `hidutil` remappings do not survive a reboot (or
+# the last keyboard disconnecting), so a LaunchAgent reapplies the mapping at
+# every login. Same mechanism as nix-darwin's
+# `system.keyboard.remapCapsLockToControl`, written and loaded by mise.
+[bootstrap.macos.launchd.agents.remap-caps-lock]
+program = "/usr/bin/hidutil"
+args = [
+  "property",
+  "--set",
+  '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0}]}',
+]
+run_at_load = true
+
 [bootstrap.macos.defaults.NSGlobalDomain]
 AppleFontSmoothing = 2
 AppleICUForce24HourTime = true
@@ -259,9 +278,9 @@ value = false
 "~/.config/git/allowed_signers" = { source = "home/git/allowed_signers", mode = "symlink" }
 "~/.config/git/ignore" = { source = "home/git/ignore", mode = "symlink" }
 "~/.config/ghostty/config" = { source = "home/ghostty/config", mode = "symlink" }
+"~/.config/herdr/config.toml" = { source = "home/herdr/config.toml", mode = "symlink" }
 "~/.config/nvim" = { source = "home/nvim", mode = "symlink" }
 "~/.config/ripgrep/ripgreprc" = { source = "home/ripgrep/ripgreprc", mode = "symlink" }
-"~/.config/tmux/tmux.conf" = { source = "home/tmux/tmux.conf", mode = "symlink" }
 "~/.inputrc" = { source = "home/inputrc", mode = "symlink" }
 "~/.profile" = { source = "home/profile", mode = "symlink" }
 "~/.ssh/config" = { source = "home/ssh/config", mode = "symlink" }

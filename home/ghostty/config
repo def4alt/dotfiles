@@ -1,7 +1,7 @@
 # Managed by mise: https://github.com/def4alt/dotfiles
 
 clipboard-read = allow
-command = bash -lic "tmux new-session -A -s main"
+command = bash -lic "herdr"
 copy-on-select = clipboard
 font-family = JetBrains Mono
 font-size = 18

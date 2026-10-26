@@ -1,0 +1,19 @@
+onboarding = false
+# Managed by mise: https://github.com/def4alt/dotfiles
+
+# Keep the ctrl+space prefix from the tmux configuration this replaced; Herdr
+# defaults to ctrl+b.
+keys.prefix = "ctrl+space"
+
+# Panes start as login shells of Homebrew's bash, so they read ~/.bash_profile
+# and get the PATH mise sets up regardless of the environment the Herdr server
+# inherited. Mirrors the old tmux `default-shell`/`default-command` pair.
+terminal.default_shell = "/opt/homebrew/bin/bash"
+terminal.shell_mode = "login"
+
+[ui.sound]
+enabled = false
+
+[theme]
+name = "catppuccin"
+auto_switch = false
