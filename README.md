@@ -22,7 +22,7 @@ See [docs/HISTORY.md](docs/HISTORY.md) for why the system looks like this.
 │   ├── gitignore          # Global git ignore
 │   ├── git/               # allowed_signers for SSH signature verification
 │   ├── npmrc              # Global prefix and allow-scripts
-│   ├── agents/AGENTS.md   # Working rules, linked into 3 agent dirs
+│   ├── agents/AGENTS.md   # Working rules, linked into every harness
 │   ├── ssh_config         # SSH hosts, ControlMaster, 1Password agent
 │   ├── bat.conf           # bat theme
 │   ├── ghostty.conf       # Terminal emulator
@@ -254,8 +254,11 @@ projects you have not reviewed; safe mode disables env reads and `run_task`.
 Agent-facing files, for whoever maintains them:
 
 - `home/agents/AGENTS.md` is the only working-rules file. It is symlinked to
-  `~/.pi/agent/AGENTS.md`, `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`, which
-  each client loads on its own; nothing else restates it.
+  `~/.config/opencode/AGENTS.md`, `~/.codex/AGENTS.md`, `~/.pi/agent/AGENTS.md`
+  and Claude's rules file (`~/.config/claude/CLAUDE.md` on the Mac via
+  `CLAUDE_CONFIG_DIR`, `~/.claude/CLAUDE.md` on zorya), which each client loads
+  on its own; nothing else restates it. `zorya` keeps a plain `~/dotfiles`
+  clone with the same links, since only the Mac deploys `[dotfiles]` via mise.
 - Skills live in `~/.agents/skills` and are symlinked into the same two skill
   directories. Install with `npx skills add <repo> --skill <name> -g`.
 - Agent state grows without bound: `.claude/jobs`, `.codex/sessions`,
